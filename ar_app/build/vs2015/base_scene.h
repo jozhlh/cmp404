@@ -24,5 +24,5 @@ namespace hovar
 }
 
 
-#endif _BASE_SCENE_H_
+#endif //_BASE_SCENE_H_
 

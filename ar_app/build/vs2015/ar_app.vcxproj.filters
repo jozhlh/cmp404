@@ -50,6 +50,9 @@
     <ClCompile Include="main_level.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="splash_scene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\ar_app.h">
@@ -86,6 +89,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="main_level.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="splash_scene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

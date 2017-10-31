@@ -3,6 +3,8 @@
 
 #include "base_scene.h"
 
+#include <sony_sample_framework.h>
+
 #include "assets\obj_loader.h"
 #include "graphics\font.h"
 #include "graphics\sprite.h"
@@ -22,11 +24,18 @@ namespace hovar
 		~MainLevel();
 
 		void Init(gef::Platform* platform);
+		bool Update(const float frame_time);
+		void Render();
+		void CleanUp();
 
 	private:
 		void InitFont();
+		void InitLights();
+		void DrawHUD();
+		void RenderCameraFeed(struct ::AppData* dat);
+		void Render3DScene();
+		void RenderOverlay();
 
-		gef::InputManager* input_manager_;
 		gef::Renderer3D* renderer_3d_;
 		gef::SpriteRenderer* sprite_renderer_;
 		gef::Font* font_;
@@ -41,9 +50,6 @@ namespace hovar
 		PlayerCharacter* player_character_;
 		RoadSegment* road_cross_;
 		CubeMesh cube_builder_;
-
-		float kYScalingFactor_;
-		float kGridSize;
 	};
 }
 

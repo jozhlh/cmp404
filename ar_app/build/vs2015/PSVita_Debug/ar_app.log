@@ -1,8 +1,2 @@
-﻿  ar_app.cpp
-M:\CMP404\ar_app\build\vs2015\player_character.h(13,6): warning 1011: function "GameObject::Update()" is hidden by "PlayerCharacter::Update" -- virtual function override intended?
-  
-  main_vita.cpp
-M:\CMP404\ar_app\build\vs2015\player_character.h(13,6): warning 1011: function "GameObject::Update()" is hidden by "PlayerCharacter::Update" -- virtual function override intended?
-  
-  cube_mesh.cpp
+﻿  splash_scene.cpp
   ar_app.vcxproj -> M:\CMP404\ar_app\build\vs2015\PSVita_Debug\ar_app.self

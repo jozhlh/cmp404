@@ -5,14 +5,14 @@
 Camera::Camera()
 {
 	// initialise the camera settings
-	eye = gef::Vector4(5.0f, 5.0f, 300.0f);
-	lookat = gef::Vector4(0.0f, 0.0f, 0.0f);
-	up = gef::Vector4(0.0f, 1.0f, 0.0f);
-	camera_fov = gef::DegToRad(45.0f);
-	near_plane = 0.01f;
-	far_plane = 1000.f;
-	view_matrix.SetIdentity();
-	projection_matrix.SetIdentity();
+	eye_ = gef::Vector4(5.0f, 5.0f, 300.0f);
+	lookat_ = gef::Vector4(0.0f, 0.0f, 0.0f);
+	up_ = gef::Vector4(0.0f, 1.0f, 0.0f);
+	camera_fov_ = gef::DegToRad(45.0f);
+	near_plane_ = 0.01f;
+	far_plane_ = 1000.f;
+	view_matrix_.SetIdentity();
+	projection_matrix_.SetIdentity();
 }
 
 
@@ -22,12 +22,12 @@ Camera::~Camera()
 
 gef::Matrix44 Camera::CalculateViewMatrix()
 {
-	view_matrix.LookAt(eye, lookat, up);
-	return view_matrix;
+	view_matrix_.LookAt(eye_, lookat_, up_);
+	return view_matrix_;
 }
 
 gef::Matrix44 Camera::CalculateProjectionMatrix(gef::Platform& platform)
 {
-	projection_matrix = platform.PerspectiveProjectionFov(camera_fov, (float)platform.width() / (float)platform.height(), near_plane, far_plane);
-	return projection_matrix;
+	projection_matrix_ = platform.PerspectiveProjectionFov(camera_fov_, (float)platform.width() / (float)platform.height(), near_plane_, far_plane_);
+	return projection_matrix_;
 }

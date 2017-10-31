@@ -15,23 +15,23 @@ class Camera
 public:
 	Camera();
 	~Camera();
-	void SetEyePosition(gef::Vector4 pos) { eye = pos; view_matrix = CalculateViewMatrix(); }
-	void SetLookAt(gef::Vector4 target) { lookat = target; view_matrix = CalculateViewMatrix(); }
-	void SetUp(gef::Vector4 newUp) { up = newUp; CalculateViewMatrix(); }
-	gef::Vector4 Eye() { return eye; }
-	gef::Vector4 LookAt() { return lookat; }
-	gef::Vector4 Up() { return up; }
+	void SetEyePosition(gef::Vector4 pos) { eye_ = pos; view_matrix_ = CalculateViewMatrix(); }
+	void SetLookAt(gef::Vector4 target) { lookat_ = target; view_matrix_ = CalculateViewMatrix(); }
+	void SetUp(gef::Vector4 newUp) { up_ = newUp; CalculateViewMatrix(); }
+	gef::Vector4 Eye() { return eye_; }
+	gef::Vector4 LookAt() { return lookat_; }
+	gef::Vector4 Up() { return up_; }
 	gef::Matrix44 CalculateViewMatrix();
 	gef::Matrix44 CalculateProjectionMatrix(gef::Platform& platform);
 
 private:
-	gef::Matrix44 view_matrix;
-	gef::Matrix44 projection_matrix;
-	gef::Vector4 eye;
-	gef::Vector4 lookat;
-	gef::Vector4 up;
-	float camera_fov;
-	float near_plane;
-	float far_plane;
+	gef::Matrix44 view_matrix_;
+	gef::Matrix44 projection_matrix_;
+	gef::Vector4 eye_;
+	gef::Vector4 lookat_;
+	gef::Vector4 up_;
+	float camera_fov_;
+	float near_plane_;
+	float far_plane_;
 };
 

@@ -84,6 +84,7 @@
     <ClCompile Include="player_character.cpp" />
     <ClCompile Include="road_configs.cpp" />
     <ClCompile Include="road_segment.cpp" />
+    <ClCompile Include="splash_scene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\ar_app.h" />
@@ -98,6 +99,7 @@
     <ClInclude Include="player_character.h" />
     <ClInclude Include="road_configs.h" />
     <ClInclude Include="road_segment.h" />
+    <ClInclude Include="splash_scene.h" />
   </ItemGroup>
   <Import Condition="'$(ConfigurationType)' == 'Makefile' and Exists('$(VCTargetsPath)\Platforms\$(Platform)\SCE.Makefile.$(Platform).targets')" Project="$(VCTargetsPath)\Platforms\$(Platform)\SCE.Makefile.$(Platform).targets" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

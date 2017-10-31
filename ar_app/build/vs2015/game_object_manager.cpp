@@ -3,11 +3,11 @@
 
 GameObjectManager::GameObjectManager()
 {
-	current_parent = 0;
-	for (int markerNum = 0; markerNum < NUM_OF_MARKERS; markerNum++)
+	current_parent_ = 0;
+	for (int marker_num = 0; marker_num < NUM_OF_MARKERS; marker_num++)
 	{
-		marker_transform_matrices[markerNum].SetIdentity();
-		markers_visible[markerNum] = false;
+		marker_transform_matrices_[marker_num].SetIdentity();
+		markers_visible_[marker_num] = false;
 	}
 }
 
@@ -17,23 +17,23 @@ GameObjectManager::~GameObjectManager()
 
 void GameObjectManager::GivePlayerReference(GameObject * new_object)
 {
-	hovership = new_object;
+	hovership_ = new_object;
 	TrackObject(new_object);
 }
 
 void GameObjectManager::UpdateMarkerData()
 {
-	UpdateObjectsInList(marker_bound_objects);
-	UpdateObjectsInList(marker_specific_objects);
+	UpdateObjectsInList(marker_bound_objects_);
+	UpdateObjectsInList(marker_specific_objects_);
 }
 
 void GameObjectManager::RenderObjects(gef::Renderer3D * renderer)
 {
-	for (std::list<GameObject*>::iterator tracked_object = marker_bound_objects.begin(); tracked_object != marker_bound_objects.end(); ++tracked_object)
+	for (std::list<GameObject*>::iterator tracked_object = marker_bound_objects_.begin(); tracked_object != marker_bound_objects_.end(); ++tracked_object)
 	{
 		(*tracked_object)->Render(renderer);
 	}
-	for (std::list<GameObject*>::iterator tracked_object = marker_specific_objects.begin(); tracked_object != marker_specific_objects.end(); ++tracked_object)
+	for (std::list<GameObject*>::iterator tracked_object = marker_specific_objects_.begin(); tracked_object != marker_specific_objects_.end(); ++tracked_object)
 	{
 		(*tracked_object)->Render(renderer);
 	}
@@ -44,15 +44,15 @@ void GameObjectManager::UpdateObjectsInList(std::list<GameObject*> target_list)
 	for (std::list<GameObject*>::iterator tracked_object = target_list.begin(); tracked_object != target_list.end(); ++tracked_object)
 	{
 		int parentID = (*tracked_object)->GetParentMarker();
-		(*tracked_object)->SetMarkerPosition(marker_transform_matrices[parentID]);
-		(*tracked_object)->SetMarkerVisiblity(markers_visible[parentID]);
+		(*tracked_object)->SetMarkerPosition(marker_transform_matrices_[parentID]);
+		(*tracked_object)->SetMarkerVisiblity(markers_visible_[parentID]);
 	}
 }
 
 void GameObjectManager::TransferOwnership(int new_owner)
 {
-	current_parent = new_owner;
-	for (std::list<GameObject*>::iterator tracked_object = marker_bound_objects.begin(); tracked_object != marker_bound_objects.end(); ++tracked_object)
+	current_parent_ = new_owner;
+	for (std::list<GameObject*>::iterator tracked_object = marker_bound_objects_.begin(); tracked_object != marker_bound_objects_.end(); ++tracked_object)
 	{
 		(*tracked_object)->SetParentMarker(new_owner);
 	}
@@ -65,11 +65,11 @@ void GameObjectManager::TransferOwnership(int new_owner)
 bool GameObjectManager::PlayerRoadCollision()
 {
 	// if player collision with parent road collider
-	for (std::list<GameObject*>::iterator tracked_object = marker_specific_objects.begin(); tracked_object != marker_specific_objects.end(); ++tracked_object)
+	for (std::list<GameObject*>::iterator tracked_object = marker_specific_objects_.begin(); tracked_object != marker_specific_objects_.end(); ++tracked_object)
 	{
-		if ((*tracked_object)->GetParentMarker() == hovership->GetParentMarker())
+		if ((*tracked_object)->GetParentMarker() == hovership_->GetParentMarker())
 		{
-			if (CollisionAABB((*tracked_object)->Collider(), hovership->Collider()))
+			if (CollisionAABB((*tracked_object)->Collider(), hovership_->Collider()))
 			{
 				return true;
 			}
@@ -81,9 +81,9 @@ bool GameObjectManager::PlayerRoadCollision()
 	}
 		
 	// else if player collision with any other road collider
-	for (std::list<GameObject*>::iterator tracked_object = marker_specific_objects.begin(); tracked_object != marker_specific_objects.end(); ++tracked_object)
+	for (std::list<GameObject*>::iterator tracked_object = marker_specific_objects_.begin(); tracked_object != marker_specific_objects_.end(); ++tracked_object)
 	{
-		if (CollisionSpherical((*tracked_object)->Collider(), hovership->Collider()))
+		if (CollisionSpherical((*tracked_object)->Collider(), hovership_->Collider()))
 		{
 			// transfer all ownership to new parent
 			TransferOwnership((*tracked_object)->GetParentMarker());
@@ -97,15 +97,15 @@ bool GameObjectManager::PlayerRoadCollision()
 
 bool GameObjectManager::PlayerWallCollision(gef::Vector4 * collision_vector)
 {
-	for (std::list<GameObject*>::iterator tracked_object = marker_specific_objects.begin(); tracked_object != marker_specific_objects.end(); ++tracked_object)
+	for (std::list<GameObject*>::iterator tracked_object = marker_specific_objects_.begin(); tracked_object != marker_specific_objects_.end(); ++tracked_object)
 	{
 		// for each box collider
 		std::list<gef::MeshInstance*> walls = (*tracked_object)->GetWallCubes();
 		for (std::list<gef::MeshInstance*>::iterator wall = walls.begin(); wall != walls.end(); ++wall)
 		{
-			if (CollisionSpherical(hovership->Collider(), *wall))
+			if (CollisionSpherical(hovership_->Collider(), *wall))
 			{
-				GetCollisionVector(hovership->Collider(), *wall, collision_vector);
+				GetCollisionVector(hovership_->Collider(), *wall, collision_vector);
 				return true;
 			}
 		}

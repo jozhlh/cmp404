@@ -17,7 +17,7 @@ namespace hovar
 	void BaseScene::Init(gef::Platform* platform)
 	{
 		platform_ = platform;
-		input_manager_ = platform_->CreateInputManager;
+		input_manager_ = platform_->CreateInputManager();
 	}
 
 	void BaseScene::CleanUp()
