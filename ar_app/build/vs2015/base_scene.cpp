@@ -1,36 +1,40 @@
 #include "base_scene.h"
 #include "system\platform.h"
 
-BaseScene::BaseScene()
+namespace hovar
 {
-	fps_ = 0.0f;
-}
+	BaseScene::BaseScene()
+	{
+		fps_ = 0.0f;
+	}
 
 
-BaseScene::~BaseScene()
-{
-	CleanUp();
-}
+	BaseScene::~BaseScene()
+	{
+		CleanUp();
+	}
 
-void BaseScene::Init(gef::Platform & platform_)
-{
-	input_manager_ = platform_.CreateInputManager;
-}
+	void BaseScene::Init(gef::Platform* platform)
+	{
+		platform_ = platform;
+		input_manager_ = platform_->CreateInputManager;
+	}
 
-void BaseScene::CleanUp()
-{
-	delete input_manager_;
-	input_manager_ = NULL;
-}
+	void BaseScene::CleanUp()
+	{
+		delete input_manager_;
+		input_manager_ = NULL;
+	}
 
-bool BaseScene::Update(const float frame_time)
-{
-	fps_ = 1.0f / frame_time;
-	input_manager_->Update();
+	bool BaseScene::Update(const float frame_time)
+	{
+		fps_ = 1.0f / frame_time;
+		input_manager_->Update();
 
-	return true;
-}
+		return true;
+	}
 
-void BaseScene::Render()
-{
+	void BaseScene::Render()
+	{
+	}
 }
