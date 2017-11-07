@@ -9,6 +9,12 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hpp</Extensions>
     </Filter>
+    <Filter Include="Header Files\OBB">
+      <UniqueIdentifier>{3c25e9d4-8d06-42c4-8a8f-70526ebfb49f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\OBB">
+      <UniqueIdentifier>{8a0565e5-8b01-442d-915b-e5e77a075cde}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\ar_app.cpp">
@@ -53,6 +59,21 @@
     <ClCompile Include="splash_scene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="basis.cpp">
+      <Filter>Source Files\OBB</Filter>
+    </ClCompile>
+    <ClCompile Include="vector.cpp">
+      <Filter>Source Files\OBB</Filter>
+    </ClCompile>
+    <ClCompile Include="matrix.cpp">
+      <Filter>Source Files\OBB</Filter>
+    </ClCompile>
+    <ClCompile Include="coordinate_frame.cpp">
+      <Filter>Source Files\OBB</Filter>
+    </ClCompile>
+    <ClCompile Include="obb.cpp">
+      <Filter>Source Files\OBB</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\ar_app.h">
@@ -93,6 +114,21 @@
     </ClInclude>
     <ClInclude Include="splash_scene.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="basis.h">
+      <Filter>Header Files\OBB</Filter>
+    </ClInclude>
+    <ClInclude Include="vector.h">
+      <Filter>Header Files\OBB</Filter>
+    </ClInclude>
+    <ClInclude Include="matrix.h">
+      <Filter>Header Files\OBB</Filter>
+    </ClInclude>
+    <ClInclude Include="coordinate_frame.h">
+      <Filter>Header Files\OBB</Filter>
+    </ClInclude>
+    <ClInclude Include="obb.h">
+      <Filter>Header Files\OBB</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
