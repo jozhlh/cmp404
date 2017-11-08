@@ -24,6 +24,7 @@ private:
 	void CleanupActivePickups();
 	bool CollisionSpherical(gef::MeshInstance* collider_mesh_1_, gef::MeshInstance* collider_mesh_2_);
 	bool CollisionAABB(gef::MeshInstance* collider_mesh_1_, gef::MeshInstance* collider_mesh_2_);
+	bool CollisionOOBB(obb::OBB * collider_obb_1_, obb::OBB * collider_obb_2_);
 	gef::Vector4 GetSpawnLocation(float xDimensions, float yDimensions);
 
 	GameObjectManager* object_manager_;

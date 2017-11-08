@@ -7,10 +7,11 @@
 #include <graphics/renderer_3d.h>
 #include <graphics\model.h>
 #include <list>
+#include "obb.h"
 
 #define NUM_OF_MARKERS 6
 
-class Platform;
+//class Platform;
 
 class GameObject : public gef::MeshInstance
 {
@@ -32,9 +33,10 @@ public:
 	void SetVelocity(gef::Vector4 vel) { velocity_ = vel; }
 	void SetDrag(float new_drag) { drag_ = new_drag; }
 	void SetMvTransform(gef::Transform mvtransform) { m_mv_transform_ = mvtransform; }
-	void SetCollider(gef::Mesh* collision_mesh, gef::Matrix44 collider_transform);
+	void SetCollider(gef::Mesh* collision_mesh, gef::Matrix44 collider_transform, gef::Vector4 collider_size, std::string name);
 	
 	gef::MeshInstance* Collider() { return collider_; }
+	obb::OBB* Obb() { return obb_; }
 
 	gef::Model* Model() { return &m_model_; }
 	
@@ -44,18 +46,21 @@ public:
 	gef::Vector4 velocity() { return velocity_; }
 	float drag() { return drag_; }
 	virtual std::list<gef::MeshInstance*> GetWallCubes();
+	virtual std::list<obb::OBB*> GetWallObbs();
 
 	virtual void Render(gef::Renderer3D* renderer);
 protected:
 	bool parent_visible_;
 	gef::Transform* m_transform_;
 	gef::Transform m_mv_transform_;
+	obb::OBB* obb_;
 	gef::MeshInstance* collider_;
 	gef::Matrix44 collider_offset;
 
 private:
 	void SetTransformFromMatrix(gef::Matrix44 transformation_matrix);
 	float ApplyDragWithDeadZone(float current_speed, float dead_limits);
+	std::string tag;
 
 	gef::Vector4 velocity_;
 	gef::Transform* m_local_transform_;

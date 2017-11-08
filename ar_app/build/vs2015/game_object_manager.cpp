@@ -1,6 +1,8 @@
 #include "game_object_manager.h"
 #include <graphics\mesh.h>
 
+#include <iostream>
+
 GameObjectManager::GameObjectManager()
 {
 	current_parent_ = 0;
@@ -69,7 +71,8 @@ bool GameObjectManager::PlayerRoadCollision()
 	{
 		if ((*tracked_object)->GetParentMarker() == hovership_->GetParentMarker())
 		{
-			if (CollisionAABB((*tracked_object)->Collider(), hovership_->Collider()))
+			//if (CollisionAABB((*tracked_object)->Collider(), hovership_->Collider()))
+			if (CollisionOOBB((*tracked_object)->Obb(), hovership_->Obb(), true))
 			{
 				return true;
 			}
@@ -83,7 +86,8 @@ bool GameObjectManager::PlayerRoadCollision()
 	// else if player collision with any other road collider
 	for (std::list<GameObject*>::iterator tracked_object = marker_specific_objects_.begin(); tracked_object != marker_specific_objects_.end(); ++tracked_object)
 	{
-		if (CollisionSpherical((*tracked_object)->Collider(), hovership_->Collider()))
+		//if (CollisionSpherical((*tracked_object)->Collider(), hovership_->Collider()))
+		if (CollisionOOBB((*tracked_object)->Obb(), hovership_->Obb(), false))
 		{
 			// transfer all ownership to new parent
 			TransferOwnership((*tracked_object)->GetParentMarker());
@@ -100,13 +104,35 @@ bool GameObjectManager::PlayerWallCollision(gef::Vector4 * collision_vector)
 	for (std::list<GameObject*>::iterator tracked_object = marker_specific_objects_.begin(); tracked_object != marker_specific_objects_.end(); ++tracked_object)
 	{
 		// for each box collider
-		std::list<gef::MeshInstance*> walls = (*tracked_object)->GetWallCubes();
-		for (std::list<gef::MeshInstance*>::iterator wall = walls.begin(); wall != walls.end(); ++wall)
+		bool oldCol = false;
+		if (oldCol)
 		{
-			if (CollisionSpherical(hovership_->Collider(), *wall))
+			std::list<gef::MeshInstance*> walls = (*tracked_object)->GetWallCubes();
+			for (std::list<gef::MeshInstance*>::iterator wall = walls.begin(); wall != walls.end(); ++wall)
 			{
-				GetCollisionVector(hovership_->Collider(), *wall, collision_vector);
-				return true;
+				if (CollisionSpherical(hovership_->Collider(), *wall))
+				{
+					GetCollisionVector(hovership_->Collider(), *wall, collision_vector);
+					return true;
+				}
+			}
+		}
+		else
+		{
+			std::list<obb::OBB*> walls = (*tracked_object)->GetWallObbs();
+			std::list<gef::MeshInstance*> wall_meshes = (*tracked_object)->GetWallCubes();
+			int it = 0;
+			for (std::list<obb::OBB*>::iterator wall = walls.begin(); wall != walls.end(); ++wall)
+			{
+				if (CollisionOOBB(hovership_->Obb(), *wall, false))
+				{
+					std::list<gef::MeshInstance*>::iterator wall_mesh_it = wall_meshes.begin();
+					std::advance(wall_mesh_it, it);
+
+					GetCollisionVector(hovership_->Collider(), *wall_mesh_it, collision_vector);
+					return true;
+				}
+				it++;
 			}
 		}
 	}
@@ -192,6 +218,28 @@ bool GameObjectManager::CollisionSpherical(gef::MeshInstance* collider_mesh_1_, 
 	}
 
 	// if the distance squared is greater than the sum of the radii squared there is no collision
+	return false;
+}
+
+bool GameObjectManager::CollisionOOBB(obb::OBB * collider_obb_1_, obb::OBB * collider_obb_2_, bool debug)
+{
+	if (collider_obb_1_->OBBOverlap(
+		collider_obb_1_->E,
+		collider_obb_1_->O,
+		collider_obb_1_->GetBasis(),
+
+		collider_obb_2_->E,
+		collider_obb_2_->O,
+		collider_obb_2_->GetBasis()))
+	{
+		if (debug)
+		{
+			std::cout << collider_obb_1_->O.x << " " << collider_obb_1_->O.y << " " << collider_obb_1_->O.z << " size " << collider_obb_1_->E.x << " " << collider_obb_1_->E.y << " " << collider_obb_1_->E.z << std::endl;
+			std::cout << collider_obb_2_->O.x << " " << collider_obb_2_->O.y << " " << collider_obb_2_->O.z << " size " << collider_obb_2_->E.x << " " << collider_obb_2_->E.y << " " << collider_obb_2_->E.z << std::endl << std::endl;
+		}
+		 
+		return true;
+	}
 	return false;
 }
 

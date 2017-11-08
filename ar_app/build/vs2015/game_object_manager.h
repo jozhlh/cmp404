@@ -33,6 +33,7 @@ private:
 	void GetCollisionVector(gef::MeshInstance* collider_mesh_1_, gef::MeshInstance* collider_mesh_2_, gef::Vector4* collision_vector);
 	bool CollisionAABB(gef::MeshInstance* collider_mesh_1_, gef::MeshInstance* collider_mesh_2_);
 	bool CollisionSpherical(gef::MeshInstance* collider_mesh_1_, gef::MeshInstance* collider_mesh_2_);
+	bool CollisionOOBB(obb::OBB * collider_obb_1_, obb::OBB * collider_obb_2_, bool debug);
 
 	GameObject* hovership_;
 	std::list<GameObject*> marker_bound_objects_;

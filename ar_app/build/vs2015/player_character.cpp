@@ -87,6 +87,10 @@ void PlayerCharacter::UpdateMeshTransform()
 {
 	transform_ = m_mv_transform_.GetMatrix() * m_transform_->GetMatrix();
 	collider_->set_transform(collider_offset * m_transform_->GetMatrix());
+	if (obb_ != NULL)
+	{
+		obb_->SetCoordinateFrameFromMatrix(collider_offset * m_transform_->GetMatrix(), "player");
+	}
 }
 
 void PlayerCharacter::Render(gef::Renderer3D * renderer)
@@ -108,7 +112,8 @@ void PlayerCharacter::Rebound(gef::Vector4 collision_normal)
 	resultant_velocity = velocity();
 	resultant_velocity.set_x(resultant_velocity.x() - (dotby2 * collision_normal.x()));
 	resultant_velocity.set_y(resultant_velocity.y() - (dotby2 * collision_normal.y()));
-	//resultant_velocity.set_z(velocity().z() * collision_normal.z());
+	resultant_velocity.set_z(velocity().z() * collision_normal.z());
+	resultant_velocity = gef::Vector4(0.0f, 0.0f, 0.0f);
 	SetVelocity(resultant_velocity);
 	UpdateVelocity();
 }

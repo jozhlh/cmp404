@@ -12,6 +12,8 @@ namespace obb
 		Matrix R;
 
 	public:
+		Basis();
+		~Basis();
 		Basis(const Vector& v0, const Vector& v1, const Vector& v2)
 			: R(v0, v1, v2)
 		{}
@@ -23,13 +25,20 @@ namespace obb
 		const Vector& y() const { return R.C[1]; }
 		const Vector& z() const { return R.C[2]; }
 		const Matrix& basis() const { return R; }
-		void basis(const Vector& v0, const Vector& v1, const Vector& v2)
+		void SetBasis(const Vector& v0, const Vector& v1, const Vector& v2)
 		{
 			this->R[0] = v0;
 			this->R[1] = v1;
 			this->R[2] = v2;
 		}
-
+		Vector* GetBasis()
+		{
+			Vector* basis_as_vectors = new Vector[3];
+			basis_as_vectors[0] = R[0];
+			basis_as_vectors[1] = R[1];
+			basis_as_vectors[2] = R[2];
+			return basis_as_vectors;
+		}
 /*		// Right-Handed Rotations
 		void rotateAboutX(const Scalar& a)
 		{
@@ -87,7 +96,7 @@ namespace obb
 			return Vector(R.C[0].dot(v), R.C[1].dot(v), R.C[2].dot(v));
 		}
 
-		const POINT transformVectorToParent(const Vector& v) const
+		const Point transformVectorToParent(const Vector& v) const
 		{
 			return R.C[0] * v.x + R.C[1] * v.y + R.C[2] * v.z;
 		}

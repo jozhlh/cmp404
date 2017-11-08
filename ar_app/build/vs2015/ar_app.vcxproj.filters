@@ -74,6 +74,9 @@
     <ClCompile Include="obb.cpp">
       <Filter>Source Files\OBB</Filter>
     </ClCompile>
+    <ClCompile Include="test_scene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\ar_app.h">
@@ -129,6 +132,9 @@
     </ClInclude>
     <ClInclude Include="obb.h">
       <Filter>Header Files\OBB</Filter>
+    </ClInclude>
+    <ClInclude Include="test_scene.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

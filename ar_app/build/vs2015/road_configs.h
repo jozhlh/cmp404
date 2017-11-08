@@ -1,7 +1,7 @@
 #ifndef _ROAD_CONFIGS_H
 #define _ROAD_CONFIGS_H
 
-enum RoadType { cross };
+enum RoadType { cross, corner };
 
 class RoadConfigs
 {
@@ -11,6 +11,7 @@ public:
 
 	static bool* GetConfigs(RoadType shape, bool* config);
 	static bool* GetCrossConfigs(bool* config);
+	static bool* GetCornerConfigs(bool* config);
 };
 
 #endif

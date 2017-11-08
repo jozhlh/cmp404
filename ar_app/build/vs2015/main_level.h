@@ -49,6 +49,7 @@ namespace hovar
 		PickupManager* pickup_manager_;
 		PlayerCharacter* player_character_;
 		RoadSegment* road_cross_;
+		RoadSegment* road_corner_;
 		CubeMesh cube_builder_;
 	};
 }

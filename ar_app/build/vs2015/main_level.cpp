@@ -58,16 +58,36 @@ namespace hovar
 		mv_transform.set_rotation_eulers(gef::Vector4(90.0f, 0.0f, 0.0f));
 		mv_transform.set_translation(gef::Vector4(0.0f, 0.0f, 0.0f));
 
+		// Create crossroad
 		gef::Matrix44 mesh_transform;
 		mesh_transform.SetIdentity();
 		road_cross_ = new RoadSegment();
 		road_cross_->set_mesh(obj_loader_.LoadOBJToMesh("cross.obj", *platform_, road_cross_->Model()));
-		road_cross_->SetCollider(cube_builder_.CreateCubeMesh(mv_scale * 126.f, mv_scale * 42.f, mv_scale * 126.f, *platform_), mesh_transform);
+		gef::Vector4 collider_size = gef::Vector4(mv_scale * 126.f, mv_scale * 126.f, mv_scale * 126.f);
+		road_cross_->SetCollider(cube_builder_.CreateCubeMesh(collider_size.x(), collider_size.y(), collider_size.z(), *platform_), mesh_transform, collider_size, "road");
 		road_cross_->SetMvTransform(mv_transform);
+		collider_size.set_x(mv_scale * 42.f);
+		collider_size.set_y(mv_scale * 42.f);
+		collider_size.set_z(mv_scale * 42.f);
 		road_cross_->SetLocalTransformFromMatrix(mesh_transform);
-		road_cross_->InitWallCollisionBoxes(cross, cube_builder_.CreateCubeMesh(mv_scale * 42.f, mv_scale * 42.f, mv_scale * 42.f, *platform_), mv_scale * 42.f, mesh_transform);
+		road_cross_->InitWallCollisionBoxes(cross, cube_builder_.CreateCubeMesh(collider_size.x(), collider_size.y(), collider_size.z(), *platform_), mv_scale * 42.f, mesh_transform, collider_size);
 		game_object_manager_->AddMarkerSpecificObject(road_cross_);
 		road_cross_->SetParentMarker(0);
+
+		// Create corner
+		mesh_transform.SetIdentity();
+		road_corner_ = new RoadSegment();
+		road_corner_->set_mesh(obj_loader_.LoadOBJToMesh("corner.obj", *platform_, road_corner_->Model()));
+		collider_size = gef::Vector4(mv_scale * 126.f, mv_scale * 126.f, mv_scale * 126.f);
+		road_corner_->SetCollider(cube_builder_.CreateCubeMesh(collider_size.x(), collider_size.y(), collider_size.z(), *platform_), mesh_transform, collider_size, "road");
+		road_corner_->SetMvTransform(mv_transform);
+		collider_size.set_x(mv_scale * 42.f);
+		collider_size.set_y(mv_scale * 42.f);
+		collider_size.set_z(mv_scale * 42.f);
+		road_corner_->SetLocalTransformFromMatrix(mesh_transform);
+		road_corner_->InitWallCollisionBoxes(corner, cube_builder_.CreateCubeMesh(collider_size.x(), collider_size.y(), collider_size.z(), *platform_), mv_scale * 42.f, mesh_transform, collider_size);
+		game_object_manager_->AddMarkerSpecificObject(road_corner_);
+		road_corner_->SetParentMarker(1);
 		
 		// create player character
 		float player_scale = 0.3f * mv_scale;
@@ -80,7 +100,10 @@ namespace hovar
 		player_character_->set_mesh(obj_loader_.LoadOBJToMesh("hovership.obj", *platform_, player_character_->Model()));
 		mesh_transform.SetIdentity();
 		mesh_transform.SetTranslation(gef::Vector4(0.0f, 0.0f, 0.01f));
-		player_character_->SetCollider(cube_builder_.CreateCubeMesh(player_scale * 24.0f, player_scale * 12.0f, player_scale * 25.0f, *platform_), mesh_transform);
+		collider_size.set_x(player_scale * 24.0f);
+		collider_size.set_y(player_scale * 12.0f);
+		collider_size.set_z(player_scale * 25.0f);
+		player_character_->SetCollider(cube_builder_.CreateCubeMesh(collider_size.x(), collider_size.y(), collider_size.z(), *platform_), mesh_transform, collider_size, "player");
 		player_character_->SetMvTransform(ship_transform);
 		mesh_transform.SetIdentity();
 		mesh_transform.SetTranslation(gef::Vector4(0.0f, 0.0f, 0.02f));
@@ -133,6 +156,7 @@ namespace hovar
 
 		player_character_->Update(input_manager_->controller_input()->GetController(0), frame_time);
 		road_cross_->Update();
+		road_corner_->Update();
 
 		if (!game_object_manager_->PlayerRoadCollision())
 		{

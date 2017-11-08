@@ -110,6 +110,23 @@ bool PickupManager::CollisionAABB(gef::MeshInstance * collider_mesh_1_, gef::Mes
 		&& min_1.z() < max_2.z());
 }
 
+bool PickupManager::CollisionOOBB(obb::OBB * collider_obb_1_, obb::OBB * collider_obb_2_)
+{
+	if (collider_obb_1_->OBBOverlap(
+		collider_obb_1_->E,
+		collider_obb_1_->O,
+		collider_obb_1_->GetBasis(),
+
+		collider_obb_2_->E,
+		collider_obb_2_->O,
+		collider_obb_2_->GetBasis()))
+	{
+		std::cout << collider_obb_1_->O.x << " " << collider_obb_1_->O.y << " " << collider_obb_1_->O.z << " size " << collider_obb_1_->E.x << " " << collider_obb_1_->E.y << " " << collider_obb_1_->E.z << std::endl;
+		std::cout << collider_obb_2_->O.x << " " << collider_obb_2_->O.y << " " << collider_obb_2_->O.z << " size " << collider_obb_2_->E.x << " " << collider_obb_2_->E.y << " " << collider_obb_2_->E.z << std::endl << std::endl;
+		return true;
+	}
+}
+
 gef::Vector4 PickupManager::GetSpawnLocation(float xDimensions, float yDimensions)
 {
 	//std::random_device device;
@@ -150,7 +167,7 @@ Pickup * PickupManager::CreatePickup()
 	new_pickup_->set_mesh(pickup_mesh_);
 	mesh_transform.SetIdentity();
 	mesh_transform.SetTranslation(gef::Vector4(0.0f, 0.0f, 0.01f));
-	new_pickup_->SetCollider(collider_mesh_, mesh_transform);
+	new_pickup_->SetCollider(collider_mesh_, mesh_transform, gef::Vector4(mv_scale * pickup_scale * 42.0f, mv_scale * pickup_scale * 42.0f, mv_scale * pickup_scale * 42.0f), "pickup");
 	new_pickup_->SetMvTransform(pickup_transform);
 	mesh_transform.SetIdentity();
 	gef::Vector4 pos = GetSpawnLocation(0.1f, 0.1f);
@@ -166,7 +183,15 @@ void PickupManager::PlayerPickupCollision(PlayerCharacter * player)
 	{
 		if (!(*pickup)->IsCollected())
 		{
+			/*
 			if (CollisionSpherical(player->Collider(), (*pickup)->Collider()))
+			{
+				std::cout << "pickup collision" << std::endl;
+				// player has collected pickup
+				player->GiveEnergy((*pickup)->Energy());
+				(*pickup)->SetCollected(true);
+			}*/
+			if (CollisionOOBB(player->Obb(), (*pickup)->Obb()))
 			{
 				std::cout << "pickup collision" << std::endl;
 				// player has collected pickup

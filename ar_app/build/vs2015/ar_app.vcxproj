@@ -89,6 +89,7 @@
     <ClCompile Include="road_configs.cpp" />
     <ClCompile Include="road_segment.cpp" />
     <ClCompile Include="splash_scene.cpp" />
+    <ClCompile Include="test_scene.cpp" />
     <ClCompile Include="vector.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -109,6 +110,7 @@
     <ClInclude Include="road_configs.h" />
     <ClInclude Include="road_segment.h" />
     <ClInclude Include="splash_scene.h" />
+    <ClInclude Include="test_scene.h" />
     <ClInclude Include="vector.h" />
   </ItemGroup>
   <Import Condition="'$(ConfigurationType)' == 'Makefile' and Exists('$(VCTargetsPath)\Platforms\$(Platform)\SCE.Makefile.$(Platform).targets')" Project="$(VCTargetsPath)\Platforms\$(Platform)\SCE.Makefile.$(Platform).targets" />

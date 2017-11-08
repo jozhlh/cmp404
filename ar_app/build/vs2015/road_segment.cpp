@@ -23,11 +23,14 @@ RoadSegment::~RoadSegment()
 		{
 			delete wall_cubes[x][z];
 			wall_cubes[x][z] = NULL;
+
+			delete wall_obbs[x][z];
+			wall_obbs[x][z] = NULL;
 		}
 	}
 }
 
-void RoadSegment::InitWallCollisionBoxes(RoadType shape, gef::Mesh * wall_mesh, float grid_size, gef::Matrix44 root_transform)
+void RoadSegment::InitWallCollisionBoxes(RoadType shape, gef::Mesh * wall_mesh, float grid_size, gef::Matrix44 root_transform, gef::Vector4 collider_size)
 {
 	walls = RoadConfigs::GetConfigs(shape, walls);
 	gef::Matrix44 offset = root_transform;
@@ -43,10 +46,15 @@ void RoadSegment::InitWallCollisionBoxes(RoadType shape, gef::Mesh * wall_mesh, 
 				wall_cubes[x][z] = new gef::MeshInstance();
 				wall_cubes[x][z]->set_mesh(wall_mesh);
 				wall_cubes[x][z]->set_transform(wall_offsets[x][z]);
+
+
+				wall_obbs[x][z] = new obb::OBB(obb::Vector(0.5f * collider_size.x(), 0.5f * collider_size.z(), 0.5f * collider_size.y()));
+				wall_obbs[x][z]->SetCoordinateFrameFromMatrix(wall_offsets[x][z] * root_transform, "road");
 			}
 			else
 			{
 				wall_cubes[x][z] = NULL;
+				wall_obbs[x][z] = NULL;
 			}
 		}
 	}
@@ -56,6 +64,7 @@ void RoadSegment::UpdateMeshTransform()
 {
 	transform_ = m_mv_transform_.GetMatrix() * m_transform_->GetMatrix();
 	collider_->set_transform(collider_offset * m_transform_->GetMatrix());
+	obb_->SetCoordinateFrameFromMatrix(collider_offset * m_transform_->GetMatrix(), "road");
 	for (int x = 0; x < 3; x++)
 	{
 		for (int z = 0; z < 3; z++)
@@ -63,6 +72,7 @@ void RoadSegment::UpdateMeshTransform()
 			if (walls[(x * 3) + z])
 			{
 				wall_cubes[x][z]->set_transform(wall_offsets[x][z] * m_transform_->GetMatrix());
+				wall_obbs[x][z]->SetCoordinateFrameFromMatrix(wall_offsets[x][z] * m_transform_->GetMatrix(), "wall");
 			}
 		}
 	}
@@ -74,7 +84,7 @@ void RoadSegment::Render(gef::Renderer3D * renderer)
 	{
 		renderer->DrawMesh(*this);
 		//renderer->DrawMesh(*collider_);
-		/*
+		
 		for (int x = 0; x < 3; x++)
 		{
 			for (int z = 0; z < 3; z++)
@@ -85,7 +95,7 @@ void RoadSegment::Render(gef::Renderer3D * renderer)
 				}
 			}
 		}
-		*/
+		
 	}
 }
 
@@ -99,6 +109,22 @@ std::list<gef::MeshInstance*> RoadSegment::GetWallCubes()
 			if (walls[(x * 3) + z])
 			{
 				active_walls.push_back(wall_cubes[x][z]);
+			}
+		}
+	}
+	return active_walls;
+}
+
+std::list<obb::OBB*> RoadSegment::GetWallObbs()
+{
+	std::list<obb::OBB*> active_walls;
+	for (int x = 0; x < 3; x++)
+	{
+		for (int z = 0; z < 3; z++)
+		{
+			if (walls[(x * 3) + z])
+			{
+				active_walls.push_back(wall_obbs[x][z]);
 			}
 		}
 	}

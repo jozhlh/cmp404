@@ -7,7 +7,6 @@ GameObject::GameObject()
 	collider_offset.SetIdentity();
 	parent_transform_.SetIdentity();
 	parent_visible_ = false;
-	
 	parent_marker = 1;
 }
 
@@ -69,6 +68,10 @@ void GameObject::UpdateMeshTransform()
 	{
 		collider_->set_transform(collider_offset * m_transform_->GetMatrix());
 	}
+	if (obb_ != NULL)
+	{
+		obb_->SetCoordinateFrameFromMatrix(collider_offset * m_transform_->GetMatrix(), tag);
+	}
 }
 
 void GameObject::Update()
@@ -87,6 +90,11 @@ void GameObject::Translate(gef::Vector4 translationVector)
 std::list<gef::MeshInstance*> GameObject::GetWallCubes()
 {
 	return std::list<gef::MeshInstance*>();
+}
+
+std::list<obb::OBB*> GameObject::GetWallObbs()
+{
+	return std::list<obb::OBB*>();
 }
 
 void GameObject::Render(gef::Renderer3D * renderer)
@@ -110,7 +118,7 @@ void GameObject::SetLocalTransformFromMatrix(gef::Matrix44 transformation_matrix
 	SetTransformFromMatrix(m_local_transform_->GetMatrix() * parent_transform_);
 }
 
-void GameObject::SetCollider(gef::Mesh* collision_mesh, gef::Matrix44 collider_transform)
+void GameObject::SetCollider(gef::Mesh* collision_mesh, gef::Matrix44 collider_transform, gef::Vector4 collider_size, std::string name)
 {
 	collider_ = new gef::MeshInstance();
 	collider_->set_mesh(collision_mesh);
@@ -118,4 +126,11 @@ void GameObject::SetCollider(gef::Mesh* collision_mesh, gef::Matrix44 collider_t
 	collider_offset = collider_transform;
 
 	collider_->set_transform(collider_offset);
+
+	tag = name;
+
+	obb_ = new obb::OBB(obb::Vector(0.5f * collider_size.x(), 0.5f * collider_size.z(), 0.5f * collider_size.y()));
+	//obb_ = new obb::OBB(obb::Vector(0.01f, 0.01f, 0.01f));
+	obb_->SetCoordinateFrameFromMatrix(collider_offset, tag);
 }
+
