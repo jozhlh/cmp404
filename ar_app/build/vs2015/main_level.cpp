@@ -52,7 +52,7 @@ namespace hovar
 		game_object_manager_ = new GameObjectManager();
 
 		// create mesh transform
-		float mv_scale = 0.00238f;
+		float mv_scale = 0.00238f * 0.5f;
 		gef::Transform mv_transform;
 		mv_transform.set_scale(gef::Vector4(mv_scale, mv_scale, mv_scale));
 		mv_transform.set_rotation_eulers(gef::Vector4(90.0f, 0.0f, 0.0f));
@@ -163,11 +163,13 @@ namespace hovar
 			player_character_->Respawn();
 		}
 
+		/*
 		gef::Vector4 collision_vector;
 		if (game_object_manager_->PlayerWallCollision(&collision_vector))
 		{
 			player_character_->Rebound(collision_vector);
 		}
+		*/
 
 		pickup_manager_->PlayerPickupCollision(player_character_);
 		pickup_manager_->Update(frame_time);

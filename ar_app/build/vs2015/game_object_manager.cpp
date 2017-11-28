@@ -6,6 +6,7 @@
 GameObjectManager::GameObjectManager()
 {
 	current_parent_ = 0;
+	current_parent_marker_ = NULL;
 	for (int marker_num = 0; marker_num < NUM_OF_MARKERS; marker_num++)
 	{
 		marker_transform_matrices_[marker_num].SetIdentity();
@@ -51,13 +52,53 @@ void GameObjectManager::UpdateObjectsInList(std::list<GameObject*> target_list)
 	}
 }
 
-void GameObjectManager::TransferOwnership(int new_owner)
+void GameObjectManager::TransferOwnership(GameObject* new_owner)
 {
-	current_parent_ = new_owner;
+	current_parent_ = new_owner->GetParentMarker();
+	//hovership_->SetParentMarker(new_owner);
 	for (std::list<GameObject*>::iterator tracked_object = marker_bound_objects_.begin(); tracked_object != marker_bound_objects_.end(); ++tracked_object)
 	{
-		(*tracked_object)->SetParentMarker(new_owner);
+		(*tracked_object)->SetParentMarker(new_owner->GetParentMarker());
+		//(*tracked_object)->SetLocalTransformFromMatrix((*tracked_object)->GetLocalTransform()->GetMatrix() * displacement);
+		SetNewLocal((*tracked_object), new_owner);
 	}
+}
+/*
+gef::Matrix44 GameObjectManager::CalculateTransformDisplacement(GameObject * current_parent, GameObject * new_parent)
+{
+	gef::Matrix44 current_transform = current_parent->GetTransform()->GetMatrix();
+	gef::Matrix44 target_transform = new_parent->GetTransform()->GetMatrix();
+	gef::Matrix44 inverse_current = current_transform;
+	inverse_current.Inverse(current_transform);
+	gef::Matrix44 inverse_target = target_transform;
+	inverse_target.Inverse(target_transform);
+	gef::Matrix44 displacement_transform = inverse_target * current_transform;
+	return displacement_transform;
+}*/
+
+gef::Matrix44 GameObjectManager::CalculateTransformDisplacement(GameObject * current_object, GameObject * new_parent)
+{
+	gef::Matrix44 current_transform = current_object->GetTransform()->GetMatrix();
+	gef::Matrix44 target_transform = new_parent->GetTransform()->GetMatrix();
+	gef::Matrix44 inverse_current = current_transform;
+	inverse_current.Inverse(current_transform);
+	gef::Matrix44 inverse_target = target_transform;
+	inverse_target.Inverse(target_transform);
+	gef::Matrix44 displacement_transform = inverse_target * current_transform;
+	return displacement_transform;
+}
+
+void GameObjectManager::SetNewLocal(GameObject * current_object, GameObject * new_parent)
+{
+	gef::Matrix44 current_transform = current_object->GetTransform()->GetMatrix();
+	gef::Matrix44 target_transform = new_parent->GetTransform()->GetMatrix();
+	//gef::Matrix44 inverse_current = current_transform;
+	//inverse_current.Inverse(current_transform);
+	gef::Matrix44 inverse_target = target_transform;
+	inverse_target.Inverse(target_transform);
+	gef::Matrix44 displacement_transform = current_transform * inverse_target;
+	current_object->SetMarkerPosition(target_transform);
+	current_object->SetLocalTransformFromMatrix(displacement_transform);
 }
 
 // Check Player Wall Collisions
@@ -71,18 +112,35 @@ bool GameObjectManager::PlayerRoadCollision()
 	{
 		if ((*tracked_object)->GetParentMarker() == hovership_->GetParentMarker())
 		{
+			current_parent_marker_ = *tracked_object;
 			//if (CollisionAABB((*tracked_object)->Collider(), hovership_->Collider()))
 			if (CollisionOOBB((*tracked_object)->Obb(), hovership_->Obb(), true))
 			{
 				return true;
 			}
-			else
+		}
+		else
+		{
+			//if (CollisionAABB((*tracked_object)->Collider(), hovership_->Collider()))
+			if (CollisionOOBB((*tracked_object)->Obb(), hovership_->Obb(), true))
 			{
-				break;
+				current_parent_marker_ = *tracked_object;
+				if (current_parent_marker_ != NULL)
+				{
+					TransferOwnership(*tracked_object);
+				}
+
+				return true;
 			}
 		}
+			
+			//else
+			//{
+			//	break;
+			//}
+		//}
 	}
-		
+	/*	
 	// else if player collision with any other road collider
 	for (std::list<GameObject*>::iterator tracked_object = marker_specific_objects_.begin(); tracked_object != marker_specific_objects_.end(); ++tracked_object)
 	{
@@ -90,11 +148,18 @@ bool GameObjectManager::PlayerRoadCollision()
 		if (CollisionOOBB((*tracked_object)->Obb(), hovership_->Obb(), false))
 		{
 			// transfer all ownership to new parent
-			TransferOwnership((*tracked_object)->GetParentMarker());
+			if (current_parent != NULL)
+			{
+				TransferOwnership((*tracked_object)->GetParentMarker(), CalculateTransformDisplacement(current_parent, *tracked_object));
+			}
+			else
+			{
+				// Currently no parent
+			}
 			return true;
 		}
 	}
-		
+	*/
 	// player is dead
 	return false;
 }

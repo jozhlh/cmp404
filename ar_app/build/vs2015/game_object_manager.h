@@ -28,16 +28,19 @@ public:
 
 private:
 	void UpdateObjectsInList(std::list<GameObject*> target_list);
-	void TransferOwnership(int new_owner);
-
+	void TransferOwnership(GameObject* new_owner);
+	gef::Matrix44 CalculateTransformDisplacement(GameObject* current_parent, GameObject* new_parent);
+	void SetNewLocal(GameObject* current_object, GameObject* new_parent);
 	void GetCollisionVector(gef::MeshInstance* collider_mesh_1_, gef::MeshInstance* collider_mesh_2_, gef::Vector4* collision_vector);
 	bool CollisionAABB(gef::MeshInstance* collider_mesh_1_, gef::MeshInstance* collider_mesh_2_);
 	bool CollisionSpherical(gef::MeshInstance* collider_mesh_1_, gef::MeshInstance* collider_mesh_2_);
 	bool CollisionOOBB(obb::OBB * collider_obb_1_, obb::OBB * collider_obb_2_, bool debug);
 
 	GameObject* hovership_;
+	GameObject* current_parent_marker_;
 	std::list<GameObject*> marker_bound_objects_;
 	std::list<GameObject*> marker_specific_objects_;
+	gef::Matrix44 marker_displacement_;
 	gef::Matrix44 marker_transform_matrices_[NUM_OF_MARKERS];
 	bool markers_visible_[NUM_OF_MARKERS];
 

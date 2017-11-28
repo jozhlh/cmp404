@@ -84,7 +84,7 @@ void RoadSegment::Render(gef::Renderer3D * renderer)
 	{
 		renderer->DrawMesh(*this);
 		//renderer->DrawMesh(*collider_);
-		
+		/*
 		for (int x = 0; x < 3; x++)
 		{
 			for (int z = 0; z < 3; z++)
@@ -95,7 +95,7 @@ void RoadSegment::Render(gef::Renderer3D * renderer)
 				}
 			}
 		}
-		
+		*/
 	}
 }
 
