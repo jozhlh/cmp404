@@ -134,3 +134,44 @@ void GameObject::SetCollider(gef::Mesh* collision_mesh, gef::Matrix44 collider_t
 	obb_->SetCoordinateFrameFromMatrix(collider_offset, tag);
 }
 
+void GameObject::RotateFromReparent(gef::Vector4 amount_to_rotate)
+{
+	if (amount_to_rotate.x() >= 360.0f)
+	{
+		amount_to_rotate.set_x(amount_to_rotate.x() - 360.0f);
+	}
+	else if (amount_to_rotate.x() < 0.0f)
+	{
+		amount_to_rotate.set_x(amount_to_rotate.x() + 360.0f);
+	}
+	if (amount_to_rotate.y() >= 360.0f)
+	{
+		amount_to_rotate.set_y(amount_to_rotate.y() - 360.0f);
+	}
+	else if (amount_to_rotate.y() < 0.0f)
+	{
+		amount_to_rotate.set_y(amount_to_rotate.y() + 360.0f);
+	}
+	if (amount_to_rotate.z() >= 360.0f)
+	{
+		amount_to_rotate.set_z(amount_to_rotate.z() - 360.0f);
+	}
+	else if (amount_to_rotate.z() < 0.0f)
+	{
+		amount_to_rotate.set_z(amount_to_rotate.z() + 360.0f);
+	}
+	
+
+	m_transform_->set_rotation_eulers(amount_to_rotate);
+	gef::Matrix44 inv;
+	inv.Inverse(parent_transform_);
+	m_local_transform_->Set(m_transform_->GetMatrix() * inv);
+	UpdateMeshTransform();
+	//m_local_transform_->set_rotation_eulers(amount_to_rotate);
+	//SetTransformFromMatrix(m_local_transform_->GetMatrix() * parent_transform_);
+	/*amount_to_rotate.Normalise();
+	velocity_.set_x(velocity_.x() * amount_to_rotate.x());
+	velocity_.set_y(velocity_.y() * amount_to_rotate.y());
+	velocity_.set_z(velocity_.z() * amount_to_rotate.z());*/
+}
+

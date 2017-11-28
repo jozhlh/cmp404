@@ -34,7 +34,8 @@ public:
 	void SetDrag(float new_drag) { drag_ = new_drag; }
 	void SetMvTransform(gef::Transform mvtransform) { m_mv_transform_ = mvtransform; }
 	void SetCollider(gef::Mesh* collision_mesh, gef::Matrix44 collider_transform, gef::Vector4 collider_size, std::string name);
-	
+	void RotateFromReparent(gef::Vector4 amount_to_rotate);
+	gef::Matrix44 ParentTransform() { return parent_transform_; }
 	gef::MeshInstance* Collider() { return collider_; }
 	obb::OBB* Obb() { return obb_; }
 
@@ -50,25 +51,27 @@ public:
 
 	virtual void Render(gef::Renderer3D* renderer);
 protected:
+	void SetTransformFromMatrix(gef::Matrix44 transformation_matrix);
 	bool parent_visible_;
 	gef::Transform* m_transform_;
 	gef::Transform m_mv_transform_;
 	obb::OBB* obb_;
 	gef::MeshInstance* collider_;
 	gef::Matrix44 collider_offset;
-
+	gef::Transform* m_local_transform_;
+	gef::Matrix44 parent_transform_;
 private:
-	void SetTransformFromMatrix(gef::Matrix44 transformation_matrix);
+	
 	float ApplyDragWithDeadZone(float current_speed, float dead_limits);
 	std::string tag;
 
 	gef::Vector4 velocity_;
-	gef::Transform* m_local_transform_;
+	
 	
 	gef::Model m_model_;
 	float drag_;
 
-	gef::Matrix44 parent_transform_;
+	
 	
 
 	int parent_marker;

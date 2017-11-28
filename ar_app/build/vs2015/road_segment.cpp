@@ -60,6 +60,7 @@ void RoadSegment::InitWallCollisionBoxes(RoadType shape, gef::Mesh * wall_mesh, 
 	}
 }
 
+
 void RoadSegment::UpdateMeshTransform()
 {
 	transform_ = m_mv_transform_.GetMatrix() * m_transform_->GetMatrix();

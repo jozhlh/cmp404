@@ -60,9 +60,9 @@ void GameObjectManager::TransferOwnership(GameObject* new_owner)
 	hovership_->SetParentMarker(new_owner->GetParentMarker());
 	for (std::list<GameObject*>::iterator tracked_object = marker_bound_objects_.begin(); tracked_object != marker_bound_objects_.end(); ++tracked_object)
 	{
-		(*tracked_object)->SetParentMarker(new_owner->GetParentMarker());
 		//(*tracked_object)->SetLocalTransformFromMatrix((*tracked_object)->GetLocalTransform()->GetMatrix() * displacement);
 		SetNewLocal((*tracked_object), new_owner);
+		(*tracked_object)->SetParentMarker(new_owner->GetParentMarker());
 	}
 }
 /*
@@ -92,15 +92,156 @@ gef::Matrix44 GameObjectManager::CalculateTransformDisplacement(GameObject * cur
 
 void GameObjectManager::SetNewLocal(GameObject * current_object, GameObject * new_parent)
 {
+	gef::Transform* object_world = current_object->GetTransform();
+	//gef::Transform object_parent;
+	//object_parent.Set(current_object->ParentTransform());
+	gef::Transform* new_parent_transform = new_parent->GetTransform();
+
+	gef::Matrix44 inv;
+	inv.Inverse(new_parent_transform->GetMatrix());
+
+	current_object->SetMarkerPosition(new_parent_transform->GetMatrix());
+	current_object->SetLocalTransformFromMatrix(object_world->GetMatrix() * inv);
+
+
+
+	//m_transform_->set_rotation_eulers(amount_to_rotate);
+	
+	//m_local_transform_->Set(m_transform_->GetMatrix() * inv);
+	//UpdateMeshTransform();
+}
+
+/*
+void GameObjectManager::SetNewLocal(GameObject * current_object, GameObject * new_parent)
+{
+	gef::Vector4 current_rot = current_object->GetTransform()->rotation_eulers();
+	gef::Vector4 m1_rot = current_parent_marker_->GetTransform()->rotation_eulers();
+	gef::Vector4 m2_rot = new_parent->GetTransform()->rotation_eulers();
+
+	gef::Vector4 amount_to_rot = current_rot;
+	//gef::Vector4 amount_to_rot = m1_rot - m2_rot;
+	//amount_to_rot.set_x(amount_to_rot.x() * -1);
+	//amount_to_rot.set_y(amount_to_rot.y() * -1);
+	//amount_to_rot.set_z(amount_to_rot.z() * -1);
+
+	gef::Transform* target = new_parent->GetTransform();
+	gef::Transform* current = current_object->GetTransform();
+	gef::Transform* ref = current_parent_marker_->GetTransform();
+	std::cout << "M1" << std::endl;
+	PrintVector(ref->rotation_eulers());
+	std::cout << "M2" << std::endl;
+	PrintVector(target->rotation_eulers());
+	std::cout << "Current" << std::endl;
+	PrintVector(current->rotation_eulers());
+
 	gef::Matrix44 current_transform = current_object->GetTransform()->GetMatrix();
 	gef::Matrix44 target_transform = new_parent->GetTransform()->GetMatrix();
+	gef::Matrix44 inverse_target = target_transform;
+	inverse_target.Inverse(target_transform);
+	gef::Matrix44 displacement_transform;
+	displacement_transform.SetIdentity();
+	current_object->SetMarkerPosition(target_transform);
+	displacement_transform = displacement_transform * (current_transform * inverse_target);
+	gef::Transform trans;
+	trans.Set(displacement_transform);
+	//trans.set_rotation_eulers(amount_to_rot);
+	//trans.Rotate(amount_to_rot);
+	std::cout << "Result" << std::endl;
+	PrintVector(trans.rotation_eulers());
+	current_object->SetLocalTransformFromMatrix(trans.GetMatrix());
+	current_object->RotateFromReparent(amount_to_rot);
+	//TestMatrices();
+}
+*/
+/*
+void GameObjectManager::SetNewLocal(GameObject * current_object, GameObject * new_parent)
+{
+	gef::Matrix44 current_transform = current_object->GetTransform()->GetMatrix();
+	gef::Matrix44 target_transform = new_parent->GetTransform()->GetMatrix();
+	gef::Matrix44 inverse_target = target_transform;
+	inverse_target.Inverse(target_transform);
+	gef::Matrix44 displacement_transform;
+	displacement_transform.SetIdentity();
+	current_object->SetMarkerPosition(target_transform);
+	displacement_transform = displacement_transform * (current_transform * inverse_target);
+	current_object->SetLocalTransformFromMatrix(displacement_transform);
+	//TestMatrices();
+}
+*/
+/*
+void GameObjectManager::SetNewLocal(GameObject * current_object, GameObject * new_parent)
+{
+	gef::Matrix44 current_transform = current_object->GetTransform()->GetMatrix();
+	gef::Matrix44 target_transform = new_parent->GetTransform()->GetMatrix();
+	gef::Quaternion ref_rotation = current_parent_marker_->GetTransform()->rotation();
+	gef::Quaternion current_rotation = current_object->GetTransform()->rotation();
+	gef::Quaternion target_rotation = new_parent->GetTransform()->rotation();
 	//gef::Matrix44 inverse_current = current_transform;
 	//inverse_current.Inverse(current_transform);
 	gef::Matrix44 inverse_target = target_transform;
 	inverse_target.Inverse(target_transform);
-	gef::Matrix44 displacement_transform = current_transform * inverse_target;
+	gef::Matrix44 displacement_transform;
+	displacement_transform.SetIdentity();
 	current_object->SetMarkerPosition(target_transform);
+	// https://stackoverflow.com/questions/10871793/get-rotation-matrix-between-two-two-transform-matrices-xna
+	//q = q1 * (q2) ^ -1; q = q1 * conj(q2);
+	target_rotation.Conjugate(target_rotation);
+	gef::Quaternion rot = ref_rotation * target_rotation;
+	rot.Normalise();
+	rot = current_rotation * rot;
+	displacement_transform.Rotation(current_rotation);
+	displacement_transform = displacement_transform * (current_transform * inverse_target);
+	gef::Matrix44 rotation_mat;
+	rotation_mat.Rotation(current_rotation);
+	gef::Matrix44 scale_mat;
+	scale_mat.Scale(displacement_transform.GetScale());
+	gef::Vector4 translation = displacement_transform.GetTranslation();
+	displacement_transform.SetIdentity();
+	displacement_transform = scale_mat * displacement_transform;
+	displacement_transform = rotation_mat * displacement_transform;
+	displacement_transform.SetTranslation(translation);
 	current_object->SetLocalTransformFromMatrix(displacement_transform);
+	//TestMatrices();
+}*/
+
+void GameObjectManager::PrintMatrix(gef::Matrix44 matrix)
+{
+	std::cout << matrix.GetRow(0).x() << " " << matrix.GetRow(0).y() << " " << matrix.GetRow(0).z() << " " << matrix.GetRow(0).w() << std::endl;
+	std::cout << matrix.GetRow(1).x() << " " << matrix.GetRow(1).y() << " " << matrix.GetRow(1).z() << " " << matrix.GetRow(1).w() << std::endl;
+	std::cout << matrix.GetRow(2).x() << " " << matrix.GetRow(2).y() << " " << matrix.GetRow(2).z() << " " << matrix.GetRow(2).w() << std::endl;
+	std::cout << matrix.GetRow(3).x() << " " << matrix.GetRow(3).y() << " " << matrix.GetRow(3).z() << " " << matrix.GetRow(3).w() << std::endl << std::endl;
+}
+
+void GameObjectManager::PrintVector(gef::Vector4 vec)
+{
+	std::cout << vec.x() << " " << vec.y() << " " << vec.z() << " " << vec.w() << std::endl << std::endl;
+}
+
+void GameObjectManager::TestMatrices()
+{
+	gef::Matrix44 M1, M2, Mr;
+	M1.SetIdentity();
+	M2.SetIdentity();
+
+	gef::Quaternion m2Rot;
+	m2Rot.SetEulers(0.0f, 0.0f, 30.f);
+	m2Rot.Normalise();
+	M2.Rotation(m2Rot);
+	std::cout << "M2 with rotation" << std::endl;
+	PrintMatrix(M2);
+
+	M2.SetTranslation(gef::Vector4(2.0f, 2.0f, 0.0f));
+	std::cout << "M2 translation" << std::endl;
+	PrintMatrix(M2);
+	
+	M2.Inverse(M2);
+	std::cout << "M2 Inversed" << std::endl;
+	PrintMatrix(M2);
+
+	Mr = M1 * M2;
+	std::cout << "M result" << std::endl;
+	PrintMatrix(Mr);
+
 }
 
 // Check Player Wall Collisions
@@ -130,8 +271,8 @@ bool GameObjectManager::PlayerRoadCollision(float dt)
 				if (overlap_counter_ > overlap_allowance_)
 				{
 					overlap_counter_ = 0.0f;
-					current_parent_marker_ = *tracked_object;
 					TransferOwnership(*tracked_object);
+					current_parent_marker_ = *tracked_object;
 				}
 				return true;
 			}

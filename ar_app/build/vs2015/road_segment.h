@@ -15,7 +15,6 @@ public:
 	RoadSegment();
 	virtual ~RoadSegment();
 	void InitWallCollisionBoxes(RoadType shape, gef::Mesh* wall_mesh, float grid_size, gef::Matrix44 root_transform, gef::Vector4 collider_size);
-
 	void UpdateMeshTransform();
 	void Render(gef::Renderer3D * renderer);
 	std::list<gef::MeshInstance*> GetWallCubes();

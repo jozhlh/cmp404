@@ -27,6 +27,9 @@ public:
 	int ParentID() { return current_parent_; }
 
 private:
+	void PrintMatrix(gef::Matrix44 matrix);
+	void PrintVector(gef::Vector4 vec);
+	void TestMatrices();
 	void UpdateObjectsInList(std::list<GameObject*> target_list);
 	void TransferOwnership(GameObject* new_owner);
 	gef::Matrix44 CalculateTransformDisplacement(GameObject* current_parent, GameObject* new_parent);
