@@ -7,6 +7,8 @@ GameObjectManager::GameObjectManager()
 {
 	current_parent_ = 0;
 	current_parent_marker_ = NULL;
+	overlap_allowance_ = 0.3f;
+	overlap_counter_ = 0.0f;
 	for (int marker_num = 0; marker_num < NUM_OF_MARKERS; marker_num++)
 	{
 		marker_transform_matrices_[marker_num].SetIdentity();
@@ -55,7 +57,7 @@ void GameObjectManager::UpdateObjectsInList(std::list<GameObject*> target_list)
 void GameObjectManager::TransferOwnership(GameObject* new_owner)
 {
 	current_parent_ = new_owner->GetParentMarker();
-	//hovership_->SetParentMarker(new_owner);
+	hovership_->SetParentMarker(new_owner->GetParentMarker());
 	for (std::list<GameObject*>::iterator tracked_object = marker_bound_objects_.begin(); tracked_object != marker_bound_objects_.end(); ++tracked_object)
 	{
 		(*tracked_object)->SetParentMarker(new_owner->GetParentMarker());
@@ -105,8 +107,9 @@ void GameObjectManager::SetNewLocal(GameObject * current_object, GameObject * ne
 
 // Check Player Road Collisions
 
-bool GameObjectManager::PlayerRoadCollision()
+bool GameObjectManager::PlayerRoadCollision(float dt)
 {
+	overlap_counter_ += dt;
 	// if player collision with parent road collider
 	for (std::list<GameObject*>::iterator tracked_object = marker_specific_objects_.begin(); tracked_object != marker_specific_objects_.end(); ++tracked_object)
 	{
@@ -114,7 +117,7 @@ bool GameObjectManager::PlayerRoadCollision()
 		{
 			current_parent_marker_ = *tracked_object;
 			//if (CollisionAABB((*tracked_object)->Collider(), hovership_->Collider()))
-			if (CollisionOOBB((*tracked_object)->Obb(), hovership_->Obb(), true))
+			if (CollisionOOBB((*tracked_object)->Obb(), hovership_->Obb(), false))
 			{
 				return true;
 			}
@@ -124,12 +127,12 @@ bool GameObjectManager::PlayerRoadCollision()
 			//if (CollisionAABB((*tracked_object)->Collider(), hovership_->Collider()))
 			if (CollisionOOBB((*tracked_object)->Obb(), hovership_->Obb(), true))
 			{
-				current_parent_marker_ = *tracked_object;
-				if (current_parent_marker_ != NULL)
+				if (overlap_counter_ > overlap_allowance_)
 				{
+					overlap_counter_ = 0.0f;
+					current_parent_marker_ = *tracked_object;
 					TransferOwnership(*tracked_object);
 				}
-
 				return true;
 			}
 		}

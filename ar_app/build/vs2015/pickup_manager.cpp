@@ -7,8 +7,10 @@
 PickupManager::PickupManager()
 {
 	spawn_frequency = 5.0f;
-	pickups_per_spawn = 1;
+	pickups_per_spawn = 2;
+	spawn_radius = 0.2f;
 	spawn_counter = 0.0f;
+	ready_to_spawn_ = true;
 	srand(time(NULL));
 }
 
@@ -37,14 +39,10 @@ void PickupManager::Update(float dt)
 	{
 		(*pickup)->Update();
 	}
-	if (spawn_counter < spawn_frequency)
-	{
-		spawn_counter += dt;
-	}
-	else
+	if (ready_to_spawn_)
 	{
 		SpawnNewPickups();
-		spawn_counter = 0.0f;
+		ready_to_spawn_ = false;
 	}
 }
 
@@ -138,8 +136,8 @@ gef::Vector4 PickupManager::GetSpawnLocation(float xDimensions, float yDimension
 	spawn_pos.set_x(-xDimensions + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (xDimensions + xDimensions))));
 	spawn_pos.set_y(-yDimensions + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (yDimensions + yDimensions))));
 	spawn_pos.set_z(0.02f);
-	spawn_pos.set_x(0.0f);
-	spawn_pos.set_y(0.0f);
+	//spawn_pos.set_x(0.0f);
+	//spawn_pos.set_y(0.0f);
 	return spawn_pos;
 }
 
@@ -170,14 +168,14 @@ Pickup * PickupManager::CreatePickup()
 	new_pickup_->SetCollider(collider_mesh_, mesh_transform, gef::Vector4(mv_scale * pickup_scale * 42.0f, mv_scale * pickup_scale * 42.0f, mv_scale * pickup_scale * 42.0f), "pickup");
 	new_pickup_->SetMvTransform(pickup_transform);
 	mesh_transform.SetIdentity();
-	gef::Vector4 pos = GetSpawnLocation(0.1f, 0.1f);
+	gef::Vector4 pos = GetSpawnLocation(spawn_radius, spawn_radius);
 	mesh_transform.SetTranslation(pos);
 	new_pickup_->SetLocalTransformFromMatrix(mesh_transform);
 	new_pickup_->SetParentMarker(object_manager_->ParentID());
 	return new_pickup_;
 }
 
-void PickupManager::PlayerPickupCollision(PlayerCharacter * player)
+bool PickupManager::PlayerPickupCollision(PlayerCharacter * player)
 {
 	for (std::list<Pickup*>::iterator pickup = active_pickups.begin(); pickup != active_pickups.end(); ++pickup)
 	{
@@ -193,13 +191,16 @@ void PickupManager::PlayerPickupCollision(PlayerCharacter * player)
 			}*/
 			if (CollisionOOBB(player->Obb(), (*pickup)->Obb()))
 			{
+				ready_to_spawn_ = true;
 				std::cout << "pickup collision" << std::endl;
 				// player has collected pickup
 				player->GiveEnergy((*pickup)->Energy());
 				(*pickup)->SetCollected(true);
+				return true;
 			}
 		}
 	}
+	return false;
 }
 
 

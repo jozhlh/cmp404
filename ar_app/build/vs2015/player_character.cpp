@@ -120,7 +120,7 @@ void PlayerCharacter::Rebound(gef::Vector4 collision_normal)
 
 void PlayerCharacter::Respawn()
 {
-	SetParentMarker(0);
+	//SetParentMarker(0);
 	SetVelocity(gef::Vector4(0.0f, 0.0f, 0.0f));
 	SetLocalTransformFromMatrix(respawn_position);
 }

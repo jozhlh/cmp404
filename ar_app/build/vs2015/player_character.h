@@ -17,6 +17,7 @@ public:
 	void SetRespawnPosition(gef::Matrix44 init_position) { respawn_position = init_position; }
 	void Respawn();
 	void GiveEnergy(float energy) { current_energy += energy; }
+	float Energy() { return current_energy; }
 
 private:
 	gef::Vector4 Input(const gef::SonyController* controller_, float dt);

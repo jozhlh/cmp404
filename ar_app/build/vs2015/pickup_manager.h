@@ -17,8 +17,9 @@ public:
 	void Update(float dt);
 	void SpawnNewPickups();
 	Pickup* CreatePickup();
-	void PlayerPickupCollision(PlayerCharacter* player);
+	bool PlayerPickupCollision(PlayerCharacter* player);
 	gef::Model* Model() { return &m_model_; }
+	void Reset() { ready_to_spawn_ = true; }
 
 private:
 	void CleanupActivePickups();
@@ -40,7 +41,9 @@ private:
 
 	float spawn_frequency;
 	float spawn_counter;
+	float spawn_radius;
 	int pickups_per_spawn;
+	bool ready_to_spawn_;
 };
 
 #endif

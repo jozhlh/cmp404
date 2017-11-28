@@ -12,6 +12,7 @@ namespace hovar
 	MainLevel::MainLevel()
 	{
 		fps_ = 0.0f;
+		score_ = 0.0f;
 	}
 
 	MainLevel::~MainLevel()
@@ -58,6 +59,25 @@ namespace hovar
 		mv_transform.set_rotation_eulers(gef::Vector4(90.0f, 0.0f, 0.0f));
 		mv_transform.set_translation(gef::Vector4(0.0f, 0.0f, 0.0f));
 
+		gef::Matrix44 mesh_transform;
+		
+		for (int r = 0; r < NUM_OF_MARKERS; r++)
+		{
+			mesh_transform.SetIdentity();
+			road_[r] = new RoadSegment();
+			road_[r]->set_mesh(obj_loader_.LoadOBJToMesh("cross.obj", *platform_, road_[r]->Model()));
+			gef::Vector4 collider_size = gef::Vector4(mv_scale * 126.f, mv_scale * 126.f, mv_scale * 126.f);
+			road_[r]->SetCollider(cube_builder_.CreateCubeMesh(collider_size.x(), collider_size.y(), collider_size.z(), *platform_), mesh_transform, collider_size, "road");
+			road_[r]->SetMvTransform(mv_transform);
+			collider_size.set_x(mv_scale * 42.f);
+			collider_size.set_y(mv_scale * 42.f);
+			collider_size.set_z(mv_scale * 42.f);
+			road_[r]->SetLocalTransformFromMatrix(mesh_transform);
+			road_[r]->InitWallCollisionBoxes(cross, cube_builder_.CreateCubeMesh(collider_size.x(), collider_size.y(), collider_size.z(), *platform_), mv_scale * 42.f, mesh_transform, collider_size);
+			game_object_manager_->AddMarkerSpecificObject(road_[r]);
+			road_[r]->SetParentMarker(r);
+		}
+		/*
 		// Create crossroad
 		gef::Matrix44 mesh_transform;
 		mesh_transform.SetIdentity();
@@ -88,7 +108,7 @@ namespace hovar
 		road_corner_->InitWallCollisionBoxes(corner, cube_builder_.CreateCubeMesh(collider_size.x(), collider_size.y(), collider_size.z(), *platform_), mv_scale * 42.f, mesh_transform, collider_size);
 		game_object_manager_->AddMarkerSpecificObject(road_corner_);
 		road_corner_->SetParentMarker(1);
-		
+		*/
 		// create player character
 		float player_scale = 0.3f * mv_scale;
 		gef::Transform ship_transform;
@@ -100,9 +120,7 @@ namespace hovar
 		player_character_->set_mesh(obj_loader_.LoadOBJToMesh("hovership.obj", *platform_, player_character_->Model()));
 		mesh_transform.SetIdentity();
 		mesh_transform.SetTranslation(gef::Vector4(0.0f, 0.0f, 0.01f));
-		collider_size.set_x(player_scale * 24.0f);
-		collider_size.set_y(player_scale * 12.0f);
-		collider_size.set_z(player_scale * 25.0f);
+		gef::Vector4 collider_size = gef::Vector4(player_scale * 24.0f, player_scale * 12.0f, player_scale * 25.0f);
 		player_character_->SetCollider(cube_builder_.CreateCubeMesh(collider_size.x(), collider_size.y(), collider_size.z(), *platform_), mesh_transform, collider_size, "player");
 		player_character_->SetMvTransform(ship_transform);
 		mesh_transform.SetIdentity();
@@ -124,6 +142,7 @@ namespace hovar
 
 	bool MainLevel::Update(const float frame_time)
 	{
+		score_ += frame_time;
 		fps_ = 1.0f / frame_time;
 		input_manager_->Update();
 
@@ -155,12 +174,17 @@ namespace hovar
 		game_object_manager_->UpdateMarkerData();
 
 		player_character_->Update(input_manager_->controller_input()->GetController(0), frame_time);
-		road_cross_->Update();
-		road_corner_->Update();
+		//road_cross_->Update();
+		//road_corner_->Update();
+		for (int r = 0; r < NUM_OF_MARKERS; r++)
+		{
+			road_[r]->Update();
+		}
 
-		if (!game_object_manager_->PlayerRoadCollision())
+		if (!game_object_manager_->PlayerRoadCollision(frame_time))
 		{
 			player_character_->Respawn();
+			pickup_manager_->Reset();
 		}
 
 		/*
@@ -171,7 +195,10 @@ namespace hovar
 		}
 		*/
 
-		pickup_manager_->PlayerPickupCollision(player_character_);
+		if (pickup_manager_->PlayerPickupCollision(player_character_))
+		{
+			score_ += 10.0f;
+		}
 		pickup_manager_->Update(frame_time);
 
 		sampleUpdateEnd(dat);
@@ -198,9 +225,20 @@ namespace hovar
 	{
 		if (font_)
 		{
+			// fps counter
 			font_->RenderText(sprite_renderer_, 
-							  gef::Vector4(850.0f, 510.0f, -0.9f), 1.0f,
-							  0xffffffff, gef::TJ_LEFT, "FPS: %.1f", fps_);
+							  gef::Vector4(DISPLAY_WIDTH - 10.0f, 10.0f, -0.9f), 1.0f,
+							  0xffffffff, gef::TJ_RIGHT, "FPS: %.1f", fps_);
+
+			// energy level
+			font_->RenderText(sprite_renderer_,
+				gef::Vector4(10.0f, 10.0f, -0.9f), 1.0f,
+				0xffffffff, gef::TJ_LEFT, "ENERGY: %.0f", player_character_->Energy());
+
+			// score
+			font_->RenderText(sprite_renderer_,
+				gef::Vector4(DISPLAY_WIDTH * 0.5f, 10.0f, -0.9f), 1.0f,
+				0xffffffff, gef::TJ_CENTRE, "SCORE: %.0f", score_);
 		}
 	}
 
@@ -314,7 +352,13 @@ namespace hovar
 		delete player_character_;
 		player_character_ = NULL;
 
-		delete road_cross_;
-		road_cross_ = NULL;
+		for (int r = 0; r < NUM_OF_MARKERS; r++)
+		{
+			delete road_[r];
+			road_[r] = NULL;
+		}
+
+		//delete road_cross_;
+		//road_cross_ = NULL;
 	}
 }

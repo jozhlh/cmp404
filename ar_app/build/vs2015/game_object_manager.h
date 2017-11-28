@@ -22,7 +22,7 @@ public:
 	void RenderObjects(gef::Renderer3D* renderer);
 	void SetMarkerVisiblity(int markerID, bool visible) { markers_visible_[markerID] = visible; }
 	void SetMarkerPosition(int markerID, gef::Matrix44 marker_transform) { marker_transform_matrices_[markerID] = marker_transform; }
-	bool PlayerRoadCollision();
+	bool PlayerRoadCollision(float dt);
 	bool PlayerWallCollision(gef::Vector4* collision_vector);
 	int ParentID() { return current_parent_; }
 
@@ -44,6 +44,8 @@ private:
 	gef::Matrix44 marker_transform_matrices_[NUM_OF_MARKERS];
 	bool markers_visible_[NUM_OF_MARKERS];
 
+	float overlap_allowance_;
+	float overlap_counter_;
 	int current_parent_;
 };
 

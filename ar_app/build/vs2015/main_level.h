@@ -48,9 +48,12 @@ namespace hovar
 		GameObjectManager* game_object_manager_;
 		PickupManager* pickup_manager_;
 		PlayerCharacter* player_character_;
-		RoadSegment* road_cross_;
-		RoadSegment* road_corner_;
+		//RoadSegment* road_cross_;
+		//RoadSegment* road_corner_;
+		RoadSegment* road_[NUM_OF_MARKERS];
+		gef::Mesh* road_mesh;
 		CubeMesh cube_builder_;
+		float score_;
 	};
 }
 
