@@ -48,7 +48,7 @@ public:
 	float drag() { return drag_; }
 	virtual std::list<gef::MeshInstance*> GetWallCubes();
 	virtual std::list<obb::OBB*> GetWallObbs();
-
+	virtual void SetAsParent(bool is_parent) {}
 	virtual void Render(gef::Renderer3D* renderer);
 protected:
 	void SetTransformFromMatrix(gef::Matrix44 transformation_matrix);

@@ -16,6 +16,11 @@ PlayerCharacter::PlayerCharacter()
 
 	current_energy = 20.0f;
 	energy_decay_ps = 1.0f;
+	pickup_duration_ = 1.0f;
+	dead_duration_ = 0.5f;
+	pickup_counter_ = 0.0f;
+	dead_counter_ = 0.0f;
+	state_ = alive;
 }
 
 PlayerCharacter::~PlayerCharacter()
@@ -24,6 +29,26 @@ PlayerCharacter::~PlayerCharacter()
 	collider_ = NULL;
 }
 
+
+void PlayerCharacter::PickupAnim(float dt)
+{
+	state_ = alive;
+}
+
+void PlayerCharacter::DeadAnim(float dt)
+{
+	dead_counter_ += dt;
+	gef::Vector4 input_velocity = GetLocalTransform()->GetMatrix().GetColumn(2);
+	//input_velocity.set_x(0.0f);
+	//input_velocity.set_y(0.0f);
+	input_velocity.set_z(input_velocity.z() * -0.0004f);
+	ApplyAcceleration(input_velocity);
+	if (dead_counter_ > dead_duration_)
+	{
+		state_ = alive;
+		Respawn();
+	}
+}
 
 gef::Vector4 PlayerCharacter::Input(const gef::SonyController* controller_, float dt)
 {
@@ -71,16 +96,24 @@ void PlayerCharacter::Update(const gef::SonyController* controller_, float dt)
 	{
 		// Player Is Dead.
 	}
-	// Get input
-	ApplyAcceleration(Input(controller_, dt));
+	if (state_ == alive)
+	{
+		// Get input
+		ApplyAcceleration(Input(controller_, dt));
+	}
+	else if (state_ == dead)
+	{
+		DeadAnim(dt);
+	}
+	else if (state_ == pickup)
+	{
+		PickupAnim(dt);
+	}
 	// Apply drag to velocity
 	VelocityDrag(0.000002f);
 	VelocityLimits(max_speed);
 	// Update position based on velocity
 	UpdateVelocity();
-	// Perform collision detection
-		// If collision apply reflection velocity
-		// Update position based on velocity
 }
 
 void PlayerCharacter::UpdateMeshTransform()
@@ -123,4 +156,10 @@ void PlayerCharacter::Respawn()
 	//SetParentMarker(0);
 	SetVelocity(gef::Vector4(0.0f, 0.0f, 0.0f));
 	SetLocalTransformFromMatrix(respawn_position);
+}
+
+void PlayerCharacter::Kill()
+{
+	dead_counter_ = 0.0f;
+	state_ = dead;
 }

@@ -100,6 +100,18 @@ void RoadSegment::Render(gef::Renderer3D * renderer)
 	}
 }
 
+void RoadSegment::SetAsParent(bool is_parent)
+{
+	if (is_parent)
+	{
+		set_mesh(parent_mesh_);
+	}
+	else
+	{
+		set_mesh(loose_mesh_);
+	}
+}
+
 std::list<gef::MeshInstance*> RoadSegment::GetWallCubes()
 {
 	std::list<gef::MeshInstance*> active_walls;

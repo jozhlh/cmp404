@@ -9,7 +9,7 @@ public:
 	Pickup();
 	virtual ~Pickup();
 
-	void Update();
+	void Update(float dt);
 	float Energy() { return energy; }
 	void SetCollected(bool isCollected) { collected = isCollected; }
 	bool IsCollected() { return collected; }

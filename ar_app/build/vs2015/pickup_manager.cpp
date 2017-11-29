@@ -37,7 +37,7 @@ void PickupManager::Update(float dt)
 {
 	for (std::list<Pickup*>::iterator pickup = active_pickups.begin(); pickup != active_pickups.end(); ++pickup)
 	{
-		(*pickup)->Update();
+		(*pickup)->Update(dt);
 	}
 	if (ready_to_spawn_)
 	{

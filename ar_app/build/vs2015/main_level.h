@@ -19,6 +19,11 @@ namespace hovar
 {
 	class MainLevel : public BaseScene
 	{
+	private: enum State
+		{
+			running,
+			finished
+		};
 	public:
 		MainLevel();
 		~MainLevel();
@@ -29,12 +34,14 @@ namespace hovar
 		void CleanUp();
 
 	private:
+		void Restart();
 		void InitFont();
 		void InitLights();
 		void DrawHUD();
 		void RenderCameraFeed(struct ::AppData* dat);
 		void Render3DScene();
 		void RenderOverlay();
+		void RenderGameOver();
 
 		gef::Renderer3D* renderer_3d_;
 		gef::SpriteRenderer* sprite_renderer_;
@@ -45,13 +52,15 @@ namespace hovar
 		gef::OBJLoader obj_loader_;
 		gef::Matrix44 perspective_projection_fov_;
 
+		State game_state_;
 		GameObjectManager* game_object_manager_;
 		PickupManager* pickup_manager_;
 		PlayerCharacter* player_character_;
-		//RoadSegment* road_cross_;
-		//RoadSegment* road_corner_;
 		RoadSegment* road_[NUM_OF_MARKERS];
 		gef::Mesh* road_mesh;
+		gef::Mesh* parent_mesh;
+		gef::Model* road_model_;
+		gef::Model* parent_model_;
 		CubeMesh cube_builder_;
 		float score_;
 	};

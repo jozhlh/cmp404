@@ -21,6 +21,7 @@ namespace hovar
 
 	void MainLevel::Init(gef::Platform* platform)
 	{
+		game_state_ = running;
 		platform_ = platform;
 		input_manager_ = platform_->CreateInputManager();
 		sprite_renderer_ = platform_->CreateSpriteRenderer();
@@ -60,12 +61,15 @@ namespace hovar
 		mv_transform.set_translation(gef::Vector4(0.0f, 0.0f, 0.0f));
 
 		gef::Matrix44 mesh_transform;
-		
+		road_model_ = new gef::Model();
+		parent_model_ = new gef::Model();
+		road_mesh = obj_loader_.LoadOBJToMesh("cross.obj", *platform_, road_model_);
+		parent_mesh = obj_loader_.LoadOBJToMesh("corner.obj", *platform_, parent_model_);
 		for (int r = 0; r < NUM_OF_MARKERS; r++)
 		{
 			mesh_transform.SetIdentity();
 			road_[r] = new RoadSegment();
-			road_[r]->set_mesh(obj_loader_.LoadOBJToMesh("cross.obj", *platform_, road_[r]->Model()));
+			road_[r]->SetMeshes(road_mesh, parent_mesh);
 			gef::Vector4 collider_size = gef::Vector4(mv_scale * 126.f, mv_scale * 126.f, mv_scale * 126.f);
 			road_[r]->SetCollider(cube_builder_.CreateCubeMesh(collider_size.x(), collider_size.y(), collider_size.z(), *platform_), mesh_transform, collider_size, "road");
 			road_[r]->SetMvTransform(mv_transform);
@@ -76,7 +80,9 @@ namespace hovar
 			road_[r]->InitWallCollisionBoxes(cross, cube_builder_.CreateCubeMesh(collider_size.x(), collider_size.y(), collider_size.z(), *platform_), mv_scale * 42.f, mesh_transform, collider_size);
 			game_object_manager_->AddMarkerSpecificObject(road_[r]);
 			road_[r]->SetParentMarker(r);
+			road_[r]->SetAsParent(false);
 		}
+		road_[0]->SetAsParent(true);
 		
 		// create player character
 		float player_scale = 0.3f * mv_scale;
@@ -111,60 +117,81 @@ namespace hovar
 
 	bool MainLevel::Update(const float frame_time)
 	{
-		score_ += frame_time;
 		fps_ = 1.0f / frame_time;
 		input_manager_->Update();
-
-		::AppData* dat = sampleUpdateBegin();
-
-		// use the tracking library to try and find markers
-		smartUpdate(dat->currentImage);
-
-		for (int marker_id = 0; marker_id < NUM_OF_MARKERS; marker_id++)
+		if (game_state_ == running)
 		{
-			// check to see if a marker is being tracked
-			if (sampleIsMarkerFound(marker_id))
+			score_ += frame_time;
+			::AppData* dat = sampleUpdateBegin();
+
+			// use the tracking library to try and find markers
+			smartUpdate(dat->currentImage);
+
+			for (int marker_id = 0; marker_id < NUM_OF_MARKERS; marker_id++)
 			{
-				game_object_manager_->SetMarkerVisiblity(marker_id, true);
-				// marker is being tracked, get it’s transform
-				gef::Matrix44 marker_transform;
-				sampleGetTransform(
-					marker_id,
-					&marker_transform);
+				// check to see if a marker is being tracked
+				if (sampleIsMarkerFound(marker_id))
+				{
+					game_object_manager_->SetMarkerVisiblity(marker_id, true);
+					// marker is being tracked, get it’s transform
+					gef::Matrix44 marker_transform;
+					sampleGetTransform(
+						marker_id,
+						&marker_transform);
 
-				game_object_manager_->SetMarkerPosition(marker_id, marker_transform);
+					game_object_manager_->SetMarkerPosition(marker_id, marker_transform);
+				}
+				else
+				{
+					game_object_manager_->SetMarkerVisiblity(marker_id, false);
+				}
 			}
-			else
+
+			game_object_manager_->UpdateMarkerData();
+
+			player_character_->Update(input_manager_->controller_input()->GetController(0), frame_time);
+
+			for (int r = 0; r < NUM_OF_MARKERS; r++)
 			{
-				game_object_manager_->SetMarkerVisiblity(marker_id, false);
+				road_[r]->Update();
+			}
+
+			if (!game_object_manager_->PlayerRoadCollision(frame_time))
+			{
+				if (player_character_->IsAlive())
+				{
+					player_character_->Kill();
+					pickup_manager_->Reset();
+				}
+			}
+
+			if (pickup_manager_->PlayerPickupCollision(player_character_))
+			{
+				player_character_->Stop();
+				game_object_manager_->FindNewParent();
+				score_ += 10.0f;
+			}
+			pickup_manager_->Update(frame_time);
+
+			if (player_character_->Energy() < 0.0f)
+			{
+				game_state_ = finished;
+			}
+
+			sampleUpdateEnd(dat);
+		}
+		else
+		{
+			// wait for user to press x or o
+			if (input_manager_->controller_input()->GetController(0)->buttons_pressed() & gef_SONY_CTRL_CROSS)
+			{
+				Restart();
+			}
+			else if (input_manager_->controller_input()->GetController(0)->buttons_pressed() & gef_SONY_CTRL_CIRCLE)
+			{
+				return false;
 			}
 		}
-
-		game_object_manager_->UpdateMarkerData();
-
-		player_character_->Update(input_manager_->controller_input()->GetController(0), frame_time);
-		//road_cross_->Update();
-		//road_corner_->Update();
-		for (int r = 0; r < NUM_OF_MARKERS; r++)
-		{
-			road_[r]->Update();
-		}
-
-		if (!game_object_manager_->PlayerRoadCollision(frame_time))
-		{
-			player_character_->Respawn();
-			pickup_manager_->Reset();
-		}
-
-		if (pickup_manager_->PlayerPickupCollision(player_character_))
-		{
-			player_character_->Stop();
-			game_object_manager_->FindNewParent();
-			score_ += 10.0f;
-		}
-		pickup_manager_->Update(frame_time);
-
-		sampleUpdateEnd(dat);
 
 		return true;
 	}
@@ -173,14 +200,20 @@ namespace hovar
 	{
 		AppData* dat = sampleRenderBegin();
 
-		// Render the camera feed
-		RenderCameraFeed(dat);
+		if (game_state_ == running)
+		{
+			// Render the camera feed
+			RenderCameraFeed(dat);
 
-		// Render 3D scene
-		Render3DScene();
+			// Render 3D scene
+			Render3DScene();
 
-		RenderOverlay();
-
+			RenderOverlay();
+		}
+		else
+		{
+			RenderGameOver();
+		}
 		sampleRenderEnd();
 	}
 
@@ -266,6 +299,48 @@ namespace hovar
 		sprite_renderer_->End();
 	}
 
+	void MainLevel::RenderGameOver()
+	{
+		renderer_3d_->Begin();
+		renderer_3d_->End();
+		//
+		// render 2d hud on top
+		//
+		gef::Matrix44 proj_matrix2d;
+
+		proj_matrix2d = platform_->OrthographicFrustum(0.0f, platform_->width(), 0.0f, platform_->height(), -1.0f, 1.0f);
+		sprite_renderer_->set_projection_matrix(proj_matrix2d);
+		sprite_renderer_->Begin(false);
+		if (font_)
+		{
+			// fps counter
+			font_->RenderText(sprite_renderer_,
+				gef::Vector4(DISPLAY_WIDTH * 0.5f, DISPLAY_HEIGHT * 0.4f, -0.9f), 1.0f,
+				0xffffffff, gef::TJ_CENTRE, "GAME OVER");
+
+			// energy level
+			font_->RenderText(sprite_renderer_,
+				gef::Vector4(DISPLAY_WIDTH * 0.5f, DISPLAY_HEIGHT * 0.5f, -0.9f), 1.0f,
+				0xffffffff, gef::TJ_CENTRE, "SCORE: %.0f", score_);
+
+			// score
+			font_->RenderText(sprite_renderer_,
+				gef::Vector4(DISPLAY_WIDTH * 0.5f, DISPLAY_HEIGHT * 0.6f, -0.9f), 1.0f,
+				0xffffffff, gef::TJ_CENTRE, "'X' To Restart        'O' To Quit");
+		}
+		sprite_renderer_->End();
+	}
+
+	void MainLevel::Restart()
+	{
+		score_ = 0.0f;
+		player_character_->ResetEnergy();
+		player_character_->Respawn();
+		player_character_->Stop();
+		pickup_manager_->Reset();
+		game_state_ = running;
+	}
+
 	void MainLevel::InitFont()
 	{
 		font_ = new gef::Font(*platform_);
@@ -285,43 +360,69 @@ namespace hovar
 
 	void MainLevel::CleanUp()
 	{
-		delete input_manager_;
-		input_manager_ = NULL;
-
-		smartRelease();
-		sampleRelease();
-
-		delete renderer_3d_;
-		renderer_3d_ = NULL;
-
-		delete sprite_renderer_;
-		sprite_renderer_ = NULL;
-
-		delete font_;
-		font_ = NULL;
-
-		delete camera_display_;
-		camera_display_ = NULL;
-
-		delete camera_texture_;
-		camera_texture_ = NULL;
-
-		delete game_object_manager_;
-		game_object_manager_ = NULL;
-
-		delete pickup_manager_;
-		pickup_manager_ = NULL;
-
-		delete player_character_;
-		player_character_ = NULL;
-
-		for (int r = 0; r < NUM_OF_MARKERS; r++)
+		if (input_manager_)
 		{
-			delete road_[r];
-			road_[r] = NULL;
+			delete input_manager_;
+			input_manager_ = NULL;
 		}
 
-		//delete road_cross_;
-		//road_cross_ = NULL;
+		if (renderer_3d_)
+		{
+			delete renderer_3d_;
+			renderer_3d_ = NULL;
+		}
+
+		if (sprite_renderer_)
+		{
+			delete sprite_renderer_;
+			sprite_renderer_ = NULL;
+		}
+
+		if (font_)
+		{
+			delete font_;
+			font_ = NULL;
+		}
+
+		if (camera_display_)
+		{
+			delete camera_display_;
+			camera_display_ = NULL;
+		}
+
+		if (camera_texture_)
+		{
+			//delete camera_texture_;
+			//camera_texture_ = NULL;
+		}
+
+		if (game_object_manager_)
+		{
+			delete game_object_manager_;
+			game_object_manager_ = NULL;
+		}
+
+		if (pickup_manager_)
+		{
+			delete pickup_manager_;
+			pickup_manager_ = NULL;
+		}
+
+		if (player_character_)
+		{
+			delete player_character_;
+			player_character_ = NULL;
+		}
+		
+		for (int r = 0; r < NUM_OF_MARKERS; r++)
+		{
+			if (road_[r])
+			{
+				delete road_[r];
+				road_[r] = NULL;
+			}
+		}
+		smartRelease();
+		sampleRelease();
 	}
 }

@@ -88,6 +88,11 @@ void GameObjectManager::FindNewParent()
 		{
 			TransferOwnership(*tracked_object);
 			current_parent_marker_ = *tracked_object;
+			for (std::list<GameObject*>::iterator segs = marker_specific_objects_.begin(); segs != marker_specific_objects_.end(); ++segs)
+			{
+				(*segs)->SetAsParent(false);
+			}
+			(*tracked_object)->SetAsParent(true);
 			return;
 		}
 	}
