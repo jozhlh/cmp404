@@ -77,38 +77,7 @@ namespace hovar
 			game_object_manager_->AddMarkerSpecificObject(road_[r]);
 			road_[r]->SetParentMarker(r);
 		}
-		/*
-		// Create crossroad
-		gef::Matrix44 mesh_transform;
-		mesh_transform.SetIdentity();
-		road_cross_ = new RoadSegment();
-		road_cross_->set_mesh(obj_loader_.LoadOBJToMesh("cross.obj", *platform_, road_cross_->Model()));
-		gef::Vector4 collider_size = gef::Vector4(mv_scale * 126.f, mv_scale * 126.f, mv_scale * 126.f);
-		road_cross_->SetCollider(cube_builder_.CreateCubeMesh(collider_size.x(), collider_size.y(), collider_size.z(), *platform_), mesh_transform, collider_size, "road");
-		road_cross_->SetMvTransform(mv_transform);
-		collider_size.set_x(mv_scale * 42.f);
-		collider_size.set_y(mv_scale * 42.f);
-		collider_size.set_z(mv_scale * 42.f);
-		road_cross_->SetLocalTransformFromMatrix(mesh_transform);
-		road_cross_->InitWallCollisionBoxes(cross, cube_builder_.CreateCubeMesh(collider_size.x(), collider_size.y(), collider_size.z(), *platform_), mv_scale * 42.f, mesh_transform, collider_size);
-		game_object_manager_->AddMarkerSpecificObject(road_cross_);
-		road_cross_->SetParentMarker(0);
-
-		// Create corner
-		mesh_transform.SetIdentity();
-		road_corner_ = new RoadSegment();
-		road_corner_->set_mesh(obj_loader_.LoadOBJToMesh("corner.obj", *platform_, road_corner_->Model()));
-		collider_size = gef::Vector4(mv_scale * 126.f, mv_scale * 126.f, mv_scale * 126.f);
-		road_corner_->SetCollider(cube_builder_.CreateCubeMesh(collider_size.x(), collider_size.y(), collider_size.z(), *platform_), mesh_transform, collider_size, "road");
-		road_corner_->SetMvTransform(mv_transform);
-		collider_size.set_x(mv_scale * 42.f);
-		collider_size.set_y(mv_scale * 42.f);
-		collider_size.set_z(mv_scale * 42.f);
-		road_corner_->SetLocalTransformFromMatrix(mesh_transform);
-		road_corner_->InitWallCollisionBoxes(corner, cube_builder_.CreateCubeMesh(collider_size.x(), collider_size.y(), collider_size.z(), *platform_), mv_scale * 42.f, mesh_transform, collider_size);
-		game_object_manager_->AddMarkerSpecificObject(road_corner_);
-		road_corner_->SetParentMarker(1);
-		*/
+		
 		// create player character
 		float player_scale = 0.3f * mv_scale;
 		gef::Transform ship_transform;
@@ -187,16 +156,10 @@ namespace hovar
 			pickup_manager_->Reset();
 		}
 
-		/*
-		gef::Vector4 collision_vector;
-		if (game_object_manager_->PlayerWallCollision(&collision_vector))
-		{
-			player_character_->Rebound(collision_vector);
-		}
-		*/
-
 		if (pickup_manager_->PlayerPickupCollision(player_character_))
 		{
+			player_character_->Stop();
+			game_object_manager_->FindNewParent();
 			score_ += 10.0f;
 		}
 		pickup_manager_->Update(frame_time);

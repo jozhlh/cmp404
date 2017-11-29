@@ -34,7 +34,7 @@ public:
 	void SetDrag(float new_drag) { drag_ = new_drag; }
 	void SetMvTransform(gef::Transform mvtransform) { m_mv_transform_ = mvtransform; }
 	void SetCollider(gef::Mesh* collision_mesh, gef::Matrix44 collider_transform, gef::Vector4 collider_size, std::string name);
-	void RotateFromReparent(gef::Vector4 amount_to_rotate);
+	void Stop() { velocity_ = velocity_.kZero; }
 	gef::Matrix44 ParentTransform() { return parent_transform_; }
 	gef::MeshInstance* Collider() { return collider_; }
 	obb::OBB* Obb() { return obb_; }

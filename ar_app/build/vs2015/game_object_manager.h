@@ -22,17 +22,14 @@ public:
 	void RenderObjects(gef::Renderer3D* renderer);
 	void SetMarkerVisiblity(int markerID, bool visible) { markers_visible_[markerID] = visible; }
 	void SetMarkerPosition(int markerID, gef::Matrix44 marker_transform) { marker_transform_matrices_[markerID] = marker_transform; }
+	void FindNewParent();
 	bool PlayerRoadCollision(float dt);
 	bool PlayerWallCollision(gef::Vector4* collision_vector);
 	int ParentID() { return current_parent_; }
 
 private:
-	void PrintMatrix(gef::Matrix44 matrix);
-	void PrintVector(gef::Vector4 vec);
-	void TestMatrices();
 	void UpdateObjectsInList(std::list<GameObject*> target_list);
 	void TransferOwnership(GameObject* new_owner);
-	gef::Matrix44 CalculateTransformDisplacement(GameObject* current_parent, GameObject* new_parent);
 	void SetNewLocal(GameObject* current_object, GameObject* new_parent);
 	void GetCollisionVector(gef::MeshInstance* collider_mesh_1_, gef::MeshInstance* collider_mesh_2_, gef::Vector4* collision_vector);
 	bool CollisionAABB(gef::MeshInstance* collider_mesh_1_, gef::MeshInstance* collider_mesh_2_);
