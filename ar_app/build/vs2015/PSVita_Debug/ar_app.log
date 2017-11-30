@@ -1,32 +1,6 @@
-﻿  ar_app.cpp
-M:\CMP404\ar_app\build\vs2015\pickup.h(14,7): warning 1011: function "hovar::GameObject::Update()" is hidden by "hovar::Pickup::Update" -- virtual function override intended?
+﻿  road_segment.cpp
+M:\CMP404\ar_app\build\vs2015\road_segment.cpp(13,9): warning 416: delete of pointer to incomplete class
   
-M:\CMP404\ar_app\build\vs2015\player_character.h(23,7): warning 1011: function "hovar::GameObject::Update()" is hidden by "hovar::PlayerCharacter::Update" -- virtual function override intended?
+M:\CMP404\ar_app\build\vs2015\road_segment.cpp(16,9): warning 416: delete of pointer to incomplete class
   
-  main_vita.cpp
-M:\CMP404\ar_app\build\vs2015\pickup.h(14,7): warning 1011: function "hovar::GameObject::Update()" is hidden by "hovar::Pickup::Update" -- virtual function override intended?
-  
-M:\CMP404\ar_app\build\vs2015\player_character.h(23,7): warning 1011: function "hovar::GameObject::Update()" is hidden by "hovar::PlayerCharacter::Update" -- virtual function override intended?
-  
-  game_object_manager.cpp
-  main_level.cpp
-M:\CMP404\ar_app\build\vs2015\pickup.h(14,7): warning 1011: function "hovar::GameObject::Update()" is hidden by "hovar::Pickup::Update" -- virtual function override intended?
-  
-M:\CMP404\ar_app\build\vs2015\player_character.h(23,7): warning 1011: function "hovar::GameObject::Update()" is hidden by "hovar::PlayerCharacter::Update" -- virtual function override intended?
-  
-M:\CMP404\ar_app\build\vs2015\main_level.cpp(429,10): warning 416: delete of pointer to incomplete class
-  
-M:\CMP404\ar_app\build\vs2015\main_level.cpp(435,10): warning 416: delete of pointer to incomplete class
-  
-  pickup.cpp
-M:\CMP404\ar_app\build\vs2015\pickup.h(14,7): warning 1011: function "hovar::GameObject::Update()" is hidden by "hovar::Pickup::Update" -- virtual function override intended?
-  
-  pickup_manager.cpp
-M:\CMP404\ar_app\build\vs2015\pickup.h(14,7): warning 1011: function "hovar::GameObject::Update()" is hidden by "hovar::Pickup::Update" -- virtual function override intended?
-  
-M:\CMP404\ar_app\build\vs2015\player_character.h(23,7): warning 1011: function "hovar::GameObject::Update()" is hidden by "hovar::PlayerCharacter::Update" -- virtual function override intended?
-  
-M:\CMP404\ar_app\build\vs2015\pickup_manager.cpp(77,1): warning 942: missing return statement at end of non-void function "hovar::PickupManager::CollisionOOBB"
-  
-  road_segment.cpp
   ar_app.vcxproj -> M:\CMP404\ar_app\build\vs2015\PSVita_Debug\ar_app.self

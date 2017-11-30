@@ -10,7 +10,11 @@ namespace hovar
 
 	RoadSegment::~RoadSegment()
 	{
+		delete loose_mesh_;
+		loose_mesh_ = NULL;
 
+		delete parent_mesh_;
+		parent_mesh_ = NULL;
 	}
 
 	void RoadSegment::UpdateMeshTransform()

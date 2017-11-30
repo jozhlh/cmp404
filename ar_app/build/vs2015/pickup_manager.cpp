@@ -21,6 +21,7 @@ namespace hovar
 		for (std::list<Pickup*>::iterator pickup = active_pickups_.begin(); pickup != active_pickups_.end(); ++pickup)
 		{
 			delete (*pickup);
+			(*pickup) = NULL;
 		}
 		active_pickups_.clear();
 	}

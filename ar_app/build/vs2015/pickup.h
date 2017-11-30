@@ -19,7 +19,6 @@ namespace hovar
 
 	private:
 		float energy;
-
 		bool collected;
 	};
 }

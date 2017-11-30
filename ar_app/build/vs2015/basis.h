@@ -39,49 +39,7 @@ namespace obb
 			basis_as_vectors[2] = R[2];
 			return basis_as_vectors;
 		}
-/*		// Right-Handed Rotations
-		void rotateAboutX(const Scalar& a)
-		{
-			if (0 != a)//don’t rotate by 0
-			{
-				Vector b1 = this->Y()*cos(a) + this->Z()*sin(a);
-				Vector b2 = -this->Y()*sin(a) + this->Z()*cos(a);
 
-				//set basis
-				this->M[1] = b1;
-				this->M[2] = b2;
-
-				//x is unchanged
-			}
-		}
-
-		void rotateAboutY(const Scalar& a)
-		{
-			if (0 != a)//don’t rotate by 0
-			{
-				Vector b2 = this->Z()*cos(a) + this->X()*sin(a);	//rotate z
-				Vector b0 = -this->Z()*sin(a) + this->X()*cos(a);	//rotate x
-																	//set basis
-				this->M[2] = b2;
-				this->M[0] = b0;
-				//y is unchanged
-			}
-		}
-
-		void rotateAboutZ(const Scalar& a)
-		{
-			if (0 != a)//don’t rotate by 0
-			{
-				//don’t over-write basis before calculation is done
-				Vector b0 = this->X()*cos(a) + this->Y()*sin(a);	//rotate x
-				Vector b1 = -this->X()*sin(a) + this->Y()*cos(a);	//rotate y
-																	//set basis
-				this->M[0] = b0;
-				this->M[1] = b1;
-				//z is unchanged
-			}
-		}
-		*/
 		//rotate the basis about the unit axis u by theta (radians)
 		void rotate(const Scalar& theta, const Vector& u);
 

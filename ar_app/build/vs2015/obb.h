@@ -33,7 +33,6 @@ namespace obb {
 			right.x = gef_right.x();
 			right.y = gef_right.y();
 			right.z = gef_right.z();
-			//std::cout << tag.c_str() << " " << origin.x << " " << origin.y << " " << origin.z << std::endl;
 			SetCoordinateFrame(origin, right, forward, up);
 		}
 		//check if two oriented bounding boxes overlap
