@@ -19,7 +19,8 @@ namespace hovar
 {
 	class MainLevel : public BaseScene
 	{
-	private: enum State
+	private: 
+		enum State
 		{
 			running,
 			finished
@@ -57,8 +58,8 @@ namespace hovar
 		PickupManager* pickup_manager_;
 		PlayerCharacter* player_character_;
 		RoadSegment* road_[NUM_OF_MARKERS];
-		gef::Mesh* road_mesh;
-		gef::Mesh* parent_mesh;
+		gef::Mesh* road_mesh_;
+		gef::Mesh* parent_mesh_;
 		gef::Model* road_model_;
 		gef::Model* parent_model_;
 		CubeMesh cube_builder_;

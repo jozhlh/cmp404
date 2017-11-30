@@ -164,11 +164,12 @@ Pickup * PickupManager::CreatePickup()
 	Pickup* new_pickup_ = new Pickup();
 	new_pickup_->set_mesh(pickup_mesh_);
 	mesh_transform.SetIdentity();
-	mesh_transform.SetTranslation(gef::Vector4(0.0f, 0.0f, 0.01f));
+	mesh_transform.SetTranslation(gef::Vector4(0.0f, 0.0f, 0.005f));
 	new_pickup_->SetCollider(collider_mesh_, mesh_transform, gef::Vector4(mv_scale * pickup_scale * 42.0f, mv_scale * pickup_scale * 42.0f, mv_scale * pickup_scale * 42.0f), "pickup");
 	new_pickup_->SetMvTransform(pickup_transform);
 	mesh_transform.SetIdentity();
 	gef::Vector4 pos = GetSpawnLocation(spawn_radius, spawn_radius);
+	pos.set_z(mv_scale * 80.0f);
 	mesh_transform.SetTranslation(pos);
 	new_pickup_->SetLocalTransformFromMatrix(mesh_transform);
 	new_pickup_->SetParentMarker(object_manager_->ParentID());

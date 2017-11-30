@@ -54,7 +54,7 @@ namespace hovar
 		game_object_manager_ = new GameObjectManager();
 
 		// create mesh transform
-		float mv_scale = 0.00238f * 0.5f;
+		float mv_scale = 0.00238f * 0.45f;
 		gef::Transform mv_transform;
 		mv_transform.set_scale(gef::Vector4(mv_scale, mv_scale, mv_scale));
 		mv_transform.set_rotation_eulers(gef::Vector4(90.0f, 0.0f, 0.0f));
@@ -63,19 +63,21 @@ namespace hovar
 		gef::Matrix44 mesh_transform;
 		road_model_ = new gef::Model();
 		parent_model_ = new gef::Model();
-		road_mesh = obj_loader_.LoadOBJToMesh("cross.obj", *platform_, road_model_);
-		parent_mesh = obj_loader_.LoadOBJToMesh("corner.obj", *platform_, parent_model_);
+		road_mesh_ = obj_loader_.LoadOBJToMesh("roadDefault.obj", *platform_, road_model_);
+		parent_mesh_ = obj_loader_.LoadOBJToMesh("roadParent.obj", *platform_, parent_model_);
 		for (int r = 0; r < NUM_OF_MARKERS; r++)
 		{
 			mesh_transform.SetIdentity();
+			mesh_transform.SetTranslation(gef::Vector4(0.0f, 0.0f, mv_scale * 64.0f));
 			road_[r] = new RoadSegment();
-			road_[r]->SetMeshes(road_mesh, parent_mesh);
-			gef::Vector4 collider_size = gef::Vector4(mv_scale * 126.f, mv_scale * 126.f, mv_scale * 126.f);
+			road_[r]->SetMeshes(road_mesh_, parent_mesh_);
+			gef::Vector4 collider_size = gef::Vector4(mv_scale * 88.f, mv_scale * 88.f, mv_scale * 88.f);
 			road_[r]->SetCollider(cube_builder_.CreateCubeMesh(collider_size.x(), collider_size.y(), collider_size.z(), *platform_), mesh_transform, collider_size, "road");
 			road_[r]->SetMvTransform(mv_transform);
 			collider_size.set_x(mv_scale * 42.f);
 			collider_size.set_y(mv_scale * 42.f);
 			collider_size.set_z(mv_scale * 42.f);
+			mesh_transform.SetIdentity();
 			road_[r]->SetLocalTransformFromMatrix(mesh_transform);
 			road_[r]->InitWallCollisionBoxes(cross, cube_builder_.CreateCubeMesh(collider_size.x(), collider_size.y(), collider_size.z(), *platform_), mv_scale * 42.f, mesh_transform, collider_size);
 			game_object_manager_->AddMarkerSpecificObject(road_[r]);
@@ -85,7 +87,7 @@ namespace hovar
 		road_[0]->SetAsParent(true);
 		
 		// create player character
-		float player_scale = 0.3f * mv_scale;
+		float player_scale = 0.5f * mv_scale;
 		gef::Transform ship_transform;
 		ship_transform.set_scale(gef::Vector4(player_scale, player_scale, player_scale));
 		ship_transform.set_rotation_eulers(gef::Vector4(90.0f, 0.0f, 0.0f));
@@ -94,24 +96,24 @@ namespace hovar
 		player_character_ = new PlayerCharacter();
 		player_character_->set_mesh(obj_loader_.LoadOBJToMesh("hovership.obj", *platform_, player_character_->Model()));
 		mesh_transform.SetIdentity();
-		mesh_transform.SetTranslation(gef::Vector4(0.0f, 0.0f, 0.01f));
+		mesh_transform.SetTranslation(gef::Vector4(0.0f, 0.0f, 0.005f));
 		gef::Vector4 collider_size = gef::Vector4(player_scale * 24.0f, player_scale * 12.0f, player_scale * 25.0f);
 		player_character_->SetCollider(cube_builder_.CreateCubeMesh(collider_size.x(), collider_size.y(), collider_size.z(), *platform_), mesh_transform, collider_size, "player");
 		player_character_->SetMvTransform(ship_transform);
 		mesh_transform.SetIdentity();
-		mesh_transform.SetTranslation(gef::Vector4(0.0f, 0.0f, 0.02f));
+		mesh_transform.SetTranslation(gef::Vector4(0.0f, 0.0f, mv_scale * 80.0f));
 		player_character_->SetLocalTransformFromMatrix(mesh_transform);
 		player_character_->SetRespawnPosition(mesh_transform);
 		game_object_manager_->GivePlayerReference(player_character_);
 		player_character_->SetParentMarker(0);
 
 		// create pickup manager and pickups
-		float pickup_scale = 0.2f * mv_scale;
+		float pickup_scale = 0.7f * mv_scale;
 		pickup_manager_ = new PickupManager();
 		pickup_manager_->Init(game_object_manager_,
-			obj_loader_.LoadOBJToMesh("ref42.obj", *platform_, pickup_manager_->Model()),
-			cube_builder_.CreateCubeMesh(pickup_scale * 42.0f, pickup_scale * 42.0f,
-										 pickup_scale * 42.0f, *platform_),
+			obj_loader_.LoadOBJToMesh("battery.obj", *platform_, pickup_manager_->Model()),
+			cube_builder_.CreateCubeMesh(pickup_scale * 16.0f, pickup_scale * 16.0f,
+										 pickup_scale * 16.0f, *platform_),
 			mv_scale, pickup_scale / mv_scale);
 	}
 
@@ -422,6 +424,31 @@ namespace hovar
 				road_[r] = NULL;
 			}
 		}
+
+		if (road_mesh_)
+		{
+			delete road_mesh_;
+			road_mesh_ = NULL;
+		}
+
+		if (parent_mesh_)
+		{
+			delete parent_mesh_;
+			parent_mesh_ = NULL;
+		}
+
+		if (road_model_)
+		{
+			delete road_model_;
+			road_model_ = NULL;
+		}
+
+		if (parent_model_)
+		{
+			delete parent_model_;
+			parent_model_ = NULL;
+		}
+
 		smartRelease();
 		sampleRelease();
 	}

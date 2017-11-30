@@ -66,7 +66,7 @@ namespace hovar
 		{
 			font_->RenderText(sprite_renderer_,
 				gef::Vector4((float)DISPLAY_WIDTH * 0.5f, (float)DISPLAY_HEIGHT * 0.2f, -0.9f), 3.0f,
-				0xffffffff, gef::TJ_CENTRE, "hovAR", fps_);
+				0xffffffff, gef::TJ_CENTRE, "HOV/AR", fps_);
 			font_->RenderText(sprite_renderer_,
 				gef::Vector4((float)DISPLAY_WIDTH * 0.5f, (float)DISPLAY_HEIGHT * 0.5f, -0.9f), 1.0f,
 				0xffffffff, gef::TJ_CENTRE, "Press X to play!", fps_);

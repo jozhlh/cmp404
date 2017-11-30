@@ -23,9 +23,9 @@ void Pickup::Update(float dt)
 void Pickup::Render(gef::Renderer3D * renderer)
 {
 	renderer->DrawMesh(*this);
-	if (!collected && parent_visible_)
+	/*if (!collected && parent_visible_)
 	{
 		
 		renderer->DrawMesh(*collider_);
-	}
+	}*/
 }

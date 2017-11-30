@@ -131,7 +131,7 @@ void PlayerCharacter::Render(gef::Renderer3D * renderer)
 	if (parent_visible_)
 	{
 		renderer->DrawMesh(*this);
-		renderer->DrawMesh(*collider_);
+		//renderer->DrawMesh(*collider_);
 	}
 }
 
