@@ -7,48 +7,46 @@
 #include <graphics/renderer_3d.h>
 #include <graphics/mesh_instance.h>
 
-
-class GameObjectManager
+namespace hovar
 {
-public:
-	GameObjectManager();
-	~GameObjectManager();
+	class GameObjectManager
+	{
+	public:
+		GameObjectManager();
+		~GameObjectManager();
 
-	void GivePlayerReference(GameObject* new_object);
-	void TrackObject(GameObject* new_object) { marker_bound_objects_.push_back(new_object); }
-	void StopTrackingObject(GameObject* object_to_ignore) { marker_bound_objects_.remove(object_to_ignore); }
-	void AddMarkerSpecificObject(GameObject* new_object) { marker_specific_objects_.push_back(new_object); }
-	void UpdateMarkerData();
-	void RenderObjects(gef::Renderer3D* renderer);
-	void SetMarkerVisiblity(int markerID, bool visible) { markers_visible_[markerID] = visible; }
-	void SetMarkerPosition(int markerID, gef::Matrix44 marker_transform) { marker_transform_matrices_[markerID] = marker_transform; }
-	void FindNewParent();
-	bool PlayerRoadCollision(float dt);
-	bool PlayerWallCollision(gef::Vector4* collision_vector);
-	int ParentID() { return current_parent_; }
+		void GivePlayerReference(GameObject* new_object);
+		void TrackObject(GameObject* new_object) { marker_bound_objects_.push_back(new_object); }
+		void StopTrackingObject(GameObject* object_to_ignore) { marker_bound_objects_.remove(object_to_ignore); }
+		void AddMarkerSpecificObject(GameObject* new_object) { marker_specific_objects_.push_back(new_object); }
+		void UpdateMarkerData();
+		void RenderObjects(gef::Renderer3D* renderer);
+		void SetMarkerVisiblity(int markerID, bool visible) { markers_visible_[markerID] = visible; }
+		void SetMarkerPosition(int markerID, gef::Matrix44 marker_transform) { marker_transform_matrices_[markerID] = marker_transform; }
+		void FindNewParent();
+		bool PlayerRoadCollision(float dt);
+		int ParentID() { return current_parent_; }
 
-private:
-	void UpdateObjectsInList(std::list<GameObject*> target_list);
-	void TransferOwnership(GameObject* new_owner);
-	void SetNewLocal(GameObject* current_object, GameObject* new_parent);
-	void GetCollisionVector(gef::MeshInstance* collider_mesh_1_, gef::MeshInstance* collider_mesh_2_, gef::Vector4* collision_vector);
-	bool CollisionAABB(gef::MeshInstance* collider_mesh_1_, gef::MeshInstance* collider_mesh_2_);
-	bool CollisionSpherical(gef::MeshInstance* collider_mesh_1_, gef::MeshInstance* collider_mesh_2_);
-	bool CollisionOOBB(obb::OBB * collider_obb_1_, obb::OBB * collider_obb_2_, bool debug);
+	private:
+		void UpdateObjectsInList(std::list<GameObject*> target_list);
+		void TransferOwnership(GameObject* new_owner);
+		void SetNewLocal(GameObject* current_object, GameObject* new_parent);
+		bool CollisionSpherical(gef::MeshInstance* collider_mesh_1_, gef::MeshInstance* collider_mesh_2_);
+		bool CollisionOOBB(obb::OBB * collider_obb_1_, obb::OBB * collider_obb_2_);
 
-	GameObject* hovership_;
-	GameObject* current_parent_marker_;
-	std::list<GameObject*> marker_bound_objects_;
-	std::list<GameObject*> marker_specific_objects_;
-	gef::Matrix44 marker_displacement_;
-	gef::Matrix44 marker_transform_matrices_[NUM_OF_MARKERS];
-	bool markers_visible_[NUM_OF_MARKERS];
+		GameObject* hovership_;
+		GameObject* current_parent_marker_;
+		std::list<GameObject*> marker_bound_objects_;
+		std::list<GameObject*> marker_specific_objects_;
+		gef::Matrix44 marker_displacement_;
+		gef::Matrix44 marker_transform_matrices_[NUM_OF_MARKERS];
+		bool markers_visible_[NUM_OF_MARKERS];
 
-	float overlap_allowance_;
-	float overlap_counter_;
-	int current_parent_;
-};
-
+		float overlap_allowance_;
+		float overlap_counter_;
+		int current_parent_;
+	};
+}
 #endif // !_GAME_OBJECT_MANAGER_H
 
 

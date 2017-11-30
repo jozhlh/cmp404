@@ -4,50 +4,51 @@
 #include "game_object.h"
 #include <input\sony_controller_input_manager.h>
 
-class PlayerCharacter : public GameObject
+namespace hovar
 {
-private:
-	enum State
+	class PlayerCharacter : public GameObject
 	{
-		alive,
-		pickup,
-		dead
+	private:
+		enum State
+		{
+			alive,
+			pickup,
+			dead
+		};
+
+	public:
+		PlayerCharacter();
+		virtual ~PlayerCharacter();
+
+		void Update(const gef::SonyController* controller, float dt);
+		void UpdateMeshTransform();
+		void Render(gef::Renderer3D* renderer);
+		void SetRespawnPosition(gef::Matrix44 init_position) { respawn_position_ = init_position; }
+		void Respawn();
+		void Kill();
+		bool IsAlive() { return state_ == alive; }
+		bool ParentIsVisible() { return parent_visible_; }
+		void GiveEnergy(float energy) { current_energy_ += energy; }
+		float GetEnergy() { return current_energy_; }
+		void ResetEnergy();
+
+	private:
+		void PickupAnim(float dt);
+		void DeadAnim(float dt);
+		gef::Vector4 Input(const gef::SonyController* controller, float dt);
+		
+		gef::Matrix44 respawn_position_;
+		State state_;
+		float dead_counter_;
+		float pickup_counter_;
+		float dead_duration_;
+		float pickup_duration_;
+		float current_energy_;
+		float energy_decay_rate_;
+		float max_speed_;
+		float acceleration_;
+		float deceleration_;
+		float turning_speed_;
 	};
-public:
-	PlayerCharacter();
-	virtual ~PlayerCharacter();
-	
-	void Update(const gef::SonyController* controller_, float dt);
-	void UpdateMeshTransform();
-	void Render(gef::Renderer3D* renderer);
-	void Rebound(gef::Vector4 collision_normal);
-	void SetRespawnPosition(gef::Matrix44 init_position) { respawn_position = init_position; }
-	void Respawn();
-	void GiveEnergy(float energy) { current_energy += energy; }
-	float Energy() { return current_energy; }
-	void ResetEnergy() { current_energy = 20.0f; pickup_counter_ = 0.0f; state_ = pickup; }
-	void Kill();
-	bool IsAlive() { return state_ == alive; }
-
-private:
-	void PickupAnim(float dt);
-	void DeadAnim(float dt);
-	gef::Vector4 Input(const gef::SonyController* controller_, float dt);
-	gef::Matrix44 respawn_position;
-	
-	State state_;
-	float dead_counter_;
-	float pickup_counter_;
-	float dead_duration_;
-	float pickup_duration_;
-	float current_energy;
-	float energy_decay_ps;
-	float max_speed;
-	float acceleration;
-	float deceleration;
-	//float drag;
-	float turning_speed;
-	
-};
-
+}
 #endif

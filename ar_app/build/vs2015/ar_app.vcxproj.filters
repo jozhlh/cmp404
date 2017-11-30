@@ -38,9 +38,6 @@
     <ClCompile Include="road_segment.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="road_configs.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="pickup.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -74,9 +71,6 @@
     <ClCompile Include="obb.cpp">
       <Filter>Source Files\OBB</Filter>
     </ClCompile>
-    <ClCompile Include="test_scene.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\ar_app.h">
@@ -95,9 +89,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="road_segment.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="road_configs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="pickup.h">
@@ -132,9 +123,6 @@
     </ClInclude>
     <ClInclude Include="obb.h">
       <Filter>Header Files\OBB</Filter>
-    </ClInclude>
-    <ClInclude Include="test_scene.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

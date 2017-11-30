@@ -3,24 +3,26 @@
 
 #include "game_object.h"
 
-class Pickup : public GameObject
+namespace hovar
 {
-public:
-	Pickup();
-	virtual ~Pickup();
+	class Pickup : public GameObject
+	{
+	public:
+		Pickup();
+		virtual ~Pickup();
 
-	void Update(float dt);
-	float Energy() { return energy; }
-	void SetCollected(bool isCollected) { collected = isCollected; }
-	bool IsCollected() { return collected; }
-	void Render(gef::Renderer3D* renderer);
+		void Update(float dt);
+		float Energy() { return energy; }
+		void SetCollected(bool isCollected) { collected = isCollected; }
+		bool IsCollected() { return collected; }
+		void Render(gef::Renderer3D* renderer);
 
-private:
-	float energy;
+	private:
+		float energy;
 
-	bool collected;
-};
-
+		bool collected;
+	};
+}
 
 #endif // !_PICKUP_H
 

@@ -79,9 +79,8 @@ namespace hovar
 			collider_size.set_z(mv_scale * 42.f);
 			mesh_transform.SetIdentity();
 			road_[r]->SetLocalTransformFromMatrix(mesh_transform);
-			road_[r]->InitWallCollisionBoxes(cross, cube_builder_.CreateCubeMesh(collider_size.x(), collider_size.y(), collider_size.z(), *platform_), mv_scale * 42.f, mesh_transform, collider_size);
 			game_object_manager_->AddMarkerSpecificObject(road_[r]);
-			road_[r]->SetParentMarker(r);
+			road_[r]->SetParentMarkerID(r);
 			road_[r]->SetAsParent(false);
 		}
 		road_[0]->SetAsParent(true);
@@ -94,7 +93,7 @@ namespace hovar
 		ship_transform.set_translation(gef::Vector4(0.0f, 0.0f, 0.0f));
 
 		player_character_ = new PlayerCharacter();
-		player_character_->set_mesh(obj_loader_.LoadOBJToMesh("hovership.obj", *platform_, player_character_->Model()));
+		player_character_->set_mesh(obj_loader_.LoadOBJToMesh("hovership.obj", *platform_, player_character_->GetModel()));
 		mesh_transform.SetIdentity();
 		mesh_transform.SetTranslation(gef::Vector4(0.0f, 0.0f, 0.005f));
 		gef::Vector4 collider_size = gef::Vector4(player_scale * 24.0f, player_scale * 12.0f, player_scale * 25.0f);
@@ -105,13 +104,13 @@ namespace hovar
 		player_character_->SetLocalTransformFromMatrix(mesh_transform);
 		player_character_->SetRespawnPosition(mesh_transform);
 		game_object_manager_->GivePlayerReference(player_character_);
-		player_character_->SetParentMarker(0);
+		player_character_->SetParentMarkerID(0);
 
 		// create pickup manager and pickups
 		float pickup_scale = 0.7f * mv_scale;
 		pickup_manager_ = new PickupManager();
 		pickup_manager_->Init(game_object_manager_,
-			obj_loader_.LoadOBJToMesh("battery.obj", *platform_, pickup_manager_->Model()),
+			obj_loader_.LoadOBJToMesh("battery.obj", *platform_, pickup_manager_->GetModel()),
 			cube_builder_.CreateCubeMesh(pickup_scale * 16.0f, pickup_scale * 16.0f,
 										 pickup_scale * 16.0f, *platform_),
 			mv_scale, pickup_scale / mv_scale);
@@ -175,7 +174,7 @@ namespace hovar
 			}
 			pickup_manager_->Update(frame_time);
 
-			if (player_character_->Energy() < 0.0f)
+			if (player_character_->GetEnergy() < 0.0f)
 			{
 				game_state_ = finished;
 			}
@@ -231,7 +230,7 @@ namespace hovar
 			// energy level
 			font_->RenderText(sprite_renderer_,
 				gef::Vector4(10.0f, 10.0f, -0.9f), 1.0f,
-				0xffffffff, gef::TJ_LEFT, "ENERGY: %.0f", player_character_->Energy());
+				0xffffffff, gef::TJ_LEFT, "ENERGY: %.0f", player_character_->GetEnergy());
 
 			// score
 			font_->RenderText(sprite_renderer_,

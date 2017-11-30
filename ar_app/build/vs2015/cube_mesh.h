@@ -8,14 +8,16 @@ namespace gef
 	class Platform;
 }
 
-class CubeMesh
+namespace hovar
 {
-public:
-	CubeMesh();
-	~CubeMesh();
+	class CubeMesh
+	{
+	public:
+		CubeMesh();
+		~CubeMesh();
 
-	gef::Mesh* CreateCubeMesh(float width, float length, float height, gef::Platform& platform_);
-};
-
+		gef::Mesh* CreateCubeMesh(float width, float length, float height, gef::Platform& platform_);
+	};
+}
 #endif
 

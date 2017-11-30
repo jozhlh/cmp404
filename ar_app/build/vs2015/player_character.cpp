@@ -3,163 +3,142 @@
 #include "graphics\mesh.h"
 #define STICK_DEAD_ZONE 0.05f
 
-PlayerCharacter::PlayerCharacter()
+namespace hovar
 {
-	GameObject();
-	max_speed = 0.01f;
-	acceleration = 0.0001f;
-	deceleration = -0.0001f;
-	
-	turning_speed = 3.0f;
-	SetVelocity(gef::Vector4(0.0f, 0.0f, 0.0f));
-	SetDrag(0.000025f);
+	PlayerCharacter::PlayerCharacter()
+	{
+		GameObject();
+		max_speed_ = 0.01f;
+		acceleration_ = 0.0001f;
+		deceleration_ = -0.0001f;
 
-	current_energy = 20.0f;
-	energy_decay_ps = 1.0f;
-	pickup_duration_ = 1.0f;
-	dead_duration_ = 0.5f;
-	pickup_counter_ = 0.0f;
-	dead_counter_ = 0.0f;
-	state_ = alive;
-}
+		turning_speed_ = 3.0f;
+		SetVelocity(gef::Vector4(0.0f, 0.0f, 0.0f));
+		SetDrag(0.000025f);
 
-PlayerCharacter::~PlayerCharacter()
-{
-	delete collider_;
-	collider_ = NULL;
-}
+		current_energy_ = 20.0f;
+		energy_decay_rate_ = 1.0f;
+		pickup_duration_ = 1.0f;
+		dead_duration_ = 0.5f;
+		pickup_counter_ = 0.0f;
+		dead_counter_ = 0.0f;
+		state_ = alive;
+	}
+
+	PlayerCharacter::~PlayerCharacter()
+	{
+		delete collider_;
+		collider_ = NULL;
+	}
 
 
-void PlayerCharacter::PickupAnim(float dt)
-{
-	state_ = alive;
-}
-
-void PlayerCharacter::DeadAnim(float dt)
-{
-	dead_counter_ += dt;
-	gef::Vector4 input_velocity = GetLocalTransform()->GetMatrix().GetColumn(2);
-	//input_velocity.set_x(0.0f);
-	//input_velocity.set_y(0.0f);
-	input_velocity.set_z(input_velocity.z() * -0.0004f);
-	ApplyAcceleration(input_velocity);
-	if (dead_counter_ > dead_duration_)
+	void PlayerCharacter::PickupAnim(float dt)
 	{
 		state_ = alive;
-		Respawn();
 	}
-}
 
-gef::Vector4 PlayerCharacter::Input(const gef::SonyController* controller_, float dt)
-{
-	//controller_->UpdateButtonStates(controller_->buttons_down());
-	float forward_acceleration = 0.0f;
-
-	// Apply acceleration/deceleration to velocity
-	if (controller_->buttons_down() & gef_SONY_CTRL_CROSS)
+	void PlayerCharacter::DeadAnim(float dt)
 	{
-		//std::cout << "x pressed" << std::endl;
-		forward_acceleration = acceleration;
+		dead_counter_ += dt;
+		gef::Vector4 input_velocity = GetLocalTransform()->GetMatrix().GetColumn(2);
+		input_velocity.set_z(input_velocity.z() * -0.0004f);
+		ApplyAcceleration(input_velocity);
+		if (dead_counter_ > dead_duration_)
+		{
+			state_ = alive;
+			Respawn();
+		}
 	}
-	else if (controller_->buttons_down() & gef_SONY_CTRL_SQUARE)
+
+	gef::Vector4 PlayerCharacter::Input(const gef::SonyController* controller, float dt)
 	{
-		//std::cout << "square down" << std::endl;
-		forward_acceleration = deceleration;
+		float forward_acceleration = 0.0f;
+
+		// Apply acceleration/deceleration to velocity
+		if (controller->buttons_down() & gef_SONY_CTRL_CROSS)
+		{
+			forward_acceleration = acceleration_;
+		}
+		else if (controller->buttons_down() & gef_SONY_CTRL_SQUARE)
+		{
+			forward_acceleration = deceleration_;
+		}
+
+		// left stick sets rotation
+		float amountToRotate = 0.0f;
+		if ((controller->left_stick_x_axis() > STICK_DEAD_ZONE) || (controller->left_stick_x_axis() < STICK_DEAD_ZONE))
+		{
+			amountToRotate = controller->left_stick_x_axis() * turning_speed_;
+			GetLocalTransform()->Rotate(gef::Vector4(0.0f, 0.0f, -1 * amountToRotate));
+		}
+
+		// apply acceleration to forward vetor
+		gef::Vector4 input_velocity = GetLocalTransform()->GetMatrix().GetColumn(1);
+
+		input_velocity.set_x(-1 * input_velocity.x() * forward_acceleration);
+		input_velocity.set_y(input_velocity.y() * forward_acceleration);
+
+		return input_velocity;
 	}
 
-	if (controller_->buttons_released() & gef_SONY_CTRL_TRIANGLE)
+	void PlayerCharacter::Update(const gef::SonyController* controller, float dt)
 	{
-		std::cout << "tri released" << std::endl;
+		current_energy_ -= (energy_decay_rate_ * dt);
+		if (state_ == alive)
+		{
+			// Get input
+			ApplyAcceleration(Input(controller, dt));
+		}
+		else if (state_ == dead)
+		{
+			DeadAnim(dt);
+		}
+		else if (state_ == pickup)
+		{
+			PickupAnim(dt);
+		}
+		// Apply drag to velocity
+		VelocityDrag(0.000002f);
+		VelocityLimits(max_speed_);
+		// Update position based on velocity
+		UpdateVelocity();
 	}
 
-	// left stick sets rotation
-	float amountToRotate = 0.0f;
-	if ((controller_->left_stick_x_axis() > STICK_DEAD_ZONE) || (controller_->left_stick_x_axis() < STICK_DEAD_ZONE))
+	void PlayerCharacter::UpdateMeshTransform()
 	{
-		amountToRotate = controller_->left_stick_x_axis() * turning_speed;
-		GetLocalTransform()->Rotate(gef::Vector4(0.0f, 0.0f, -1 * amountToRotate));
+		transform_ = m_mv_transform_.GetMatrix() * m_transform_->GetMatrix();
+		collider_->set_transform(collider_offset_ * m_transform_->GetMatrix());
+		if (obb_ != NULL)
+		{
+			obb_->SetCoordinateFrameFromMatrix(collider_offset_ * m_transform_->GetMatrix(), "player");
+		}
 	}
 
-	// apply acceleration to forward vetor
-	gef::Vector4 input_velocity = GetLocalTransform()->GetMatrix().GetColumn(1);
-
-	input_velocity.set_x(-1 * input_velocity.x() * forward_acceleration);
-	input_velocity.set_y(input_velocity.y() * forward_acceleration);
-
-	return input_velocity;
-}
-
-void PlayerCharacter::Update(const gef::SonyController* controller_, float dt)
-{
-	current_energy -= (energy_decay_ps * dt);
-	if (current_energy < 0.0f)
+	void PlayerCharacter::Render(gef::Renderer3D * renderer)
 	{
-		// Player Is Dead.
+		if (parent_visible_)
+		{
+			renderer->DrawMesh(*this);
+			//renderer->DrawMesh(*collider_);
+		}
 	}
-	if (state_ == alive)
-	{
-		// Get input
-		ApplyAcceleration(Input(controller_, dt));
-	}
-	else if (state_ == dead)
-	{
-		DeadAnim(dt);
-	}
-	else if (state_ == pickup)
-	{
-		PickupAnim(dt);
-	}
-	// Apply drag to velocity
-	VelocityDrag(0.000002f);
-	VelocityLimits(max_speed);
-	// Update position based on velocity
-	UpdateVelocity();
-}
 
-void PlayerCharacter::UpdateMeshTransform()
-{
-	transform_ = m_mv_transform_.GetMatrix() * m_transform_->GetMatrix();
-	collider_->set_transform(collider_offset * m_transform_->GetMatrix());
-	if (obb_ != NULL)
+	void PlayerCharacter::Respawn()
 	{
-		obb_->SetCoordinateFrameFromMatrix(collider_offset * m_transform_->GetMatrix(), "player");
+		SetVelocity(gef::Vector4(0.0f, 0.0f, 0.0f));
+		SetLocalTransformFromMatrix(respawn_position_);
 	}
-}
 
-void PlayerCharacter::Render(gef::Renderer3D * renderer)
-{
-	if (parent_visible_)
+	void PlayerCharacter::ResetEnergy()
 	{
-		renderer->DrawMesh(*this);
-		//renderer->DrawMesh(*collider_);
+		current_energy_ = 20.0f;
+		pickup_counter_ = 0.0f;
+		state_ = pickup;
 	}
-}
 
-void PlayerCharacter::Rebound(gef::Vector4 collision_normal)
-{
-	gef::Vector4 resultant_velocity = gef::Vector4(0.0f, 0.0f, 0.0f);
-	//resultant_velocity.set_x(velocity().x() * collision_normal.x());
-	//resultant_velocity.set_y(velocity().y() * collision_normal.y());
-	//r = d−2(dDOTn)n
-	float dotby2 = 2 * velocity().DotProduct(collision_normal);
-	resultant_velocity = velocity();
-	resultant_velocity.set_x(resultant_velocity.x() - (dotby2 * collision_normal.x()));
-	resultant_velocity.set_y(resultant_velocity.y() - (dotby2 * collision_normal.y()));
-	resultant_velocity.set_z(velocity().z() * collision_normal.z());
-	resultant_velocity = gef::Vector4(0.0f, 0.0f, 0.0f);
-	SetVelocity(resultant_velocity);
-	UpdateVelocity();
-}
-
-void PlayerCharacter::Respawn()
-{
-	//SetParentMarker(0);
-	SetVelocity(gef::Vector4(0.0f, 0.0f, 0.0f));
-	SetLocalTransformFromMatrix(respawn_position);
-}
-
-void PlayerCharacter::Kill()
-{
-	dead_counter_ = 0.0f;
-	state_ = dead;
+	void PlayerCharacter::Kill()
+	{
+		dead_counter_ = 0.0f;
+		state_ = dead;
+	}
 }
