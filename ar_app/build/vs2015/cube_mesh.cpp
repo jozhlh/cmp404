@@ -14,16 +14,15 @@ namespace hovar
 	{
 	}
 
-	gef::Mesh * CubeMesh::CreateCubeMesh(float width, float length, float height, gef::Platform& platform_)
+	gef::Mesh * CubeMesh::CreateCubeMesh(float width, float length, float height, gef::Platform& platform)
 	{
-		gef::Mesh* mesh = platform_.CreateMesh();
+		gef::Mesh* mesh = platform.CreateMesh();
 
-		// initialise the vertex data to create a 1, 1, 1 cube
+		// initialise the vertex data to create a width * length * height cube
 		const float half_x = width * 0.5f;
 		const float half_y = height * 0.5f;
 		const float half_z = length * 0.5f;
-		//const float half_size = 0.5f;
-		//const float half_size = 5.0f;
+
 		const gef::Mesh::Vertex vertices[] = {
 			{ half_x, -half_y, -half_z,  0.577f, -0.577f, -0.577f, 0.0f, 0.0f },
 			{ half_x,  half_y, -half_z,  0.577f,  0.577f, -0.577f, 0.0f, 0.0f },
@@ -35,9 +34,9 @@ namespace hovar
 			{ -half_x, -half_y,  half_z, -0.577f, -0.577f,  0.577f, 0.0f, 0.0f }
 		};
 
-		mesh->InitVertexBuffer(platform_, static_cast<const void*>(vertices), sizeof(vertices) / sizeof(gef::Mesh::Vertex), sizeof(gef::Mesh::Vertex));
+		mesh->InitVertexBuffer(platform, static_cast<const void*>(vertices), sizeof(vertices) / sizeof(gef::Mesh::Vertex), sizeof(gef::Mesh::Vertex));
 
-		// we will create a single triangle list primitive to draw the triangles that make up the cube
+		// create a single triangle list primitive to draw the triangles that make up the cube
 		mesh->AllocatePrimitives(1);
 		gef::Primitive* primitive = mesh->GetPrimitive(0);
 

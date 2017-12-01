@@ -46,6 +46,37 @@ namespace hovar
 		}
 	}
 
+	void GameObjectManager::FindNewParent()
+	{
+		for (std::list<GameObject*>::iterator tracked_object = marker_specific_objects_.begin(); tracked_object != marker_specific_objects_.end(); ++tracked_object)
+		{
+			if (CollisionOOBB((*tracked_object)->GetObb(), hovership_->GetObb()))
+			{
+				TransferOwnership(*tracked_object);
+				current_parent_marker_ = *tracked_object;
+				for (std::list<GameObject*>::iterator segs = marker_specific_objects_.begin(); segs != marker_specific_objects_.end(); ++segs)
+				{
+					(*segs)->SetAsParent(false);
+				}
+				(*tracked_object)->SetAsParent(true);
+				return;
+			}
+		}
+	}
+
+	bool GameObjectManager::PlayerRoadCollision(float dt)
+	{
+		overlap_counter_ += dt;
+		for (std::list<GameObject*>::iterator tracked_object = marker_specific_objects_.begin(); tracked_object != marker_specific_objects_.end(); ++tracked_object)
+		{
+			if (CollisionOOBB((*tracked_object)->GetObb(), hovership_->GetObb()))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
 	void GameObjectManager::UpdateObjectsInList(std::list<GameObject*> target_list)
 	{
 		for (std::list<GameObject*>::iterator tracked_object = target_list.begin(); tracked_object != target_list.end(); ++tracked_object)
@@ -78,49 +109,15 @@ namespace hovar
 		current_object->SetLocalTransformFromMatrix(object_world->GetMatrix() * inv);
 	}
 
-	void GameObjectManager::FindNewParent()
-	{
-		for (std::list<GameObject*>::iterator tracked_object = marker_specific_objects_.begin(); tracked_object != marker_specific_objects_.end(); ++tracked_object)
-		{
-			if (CollisionOOBB((*tracked_object)->GetObb(), hovership_->GetObb()))
-			{
-				TransferOwnership(*tracked_object);
-				current_parent_marker_ = *tracked_object;
-				for (std::list<GameObject*>::iterator segs = marker_specific_objects_.begin(); segs != marker_specific_objects_.end(); ++segs)
-				{
-					(*segs)->SetAsParent(false);
-				}
-				(*tracked_object)->SetAsParent(true);
-				return;
-			}
-		}
-	}
-
-	bool GameObjectManager::PlayerRoadCollision(float dt)
-	{
-		overlap_counter_ += dt;
-		// if player collision with parent road collider
-		for (std::list<GameObject*>::iterator tracked_object = marker_specific_objects_.begin(); tracked_object != marker_specific_objects_.end(); ++tracked_object)
-		{
-			if (CollisionOOBB((*tracked_object)->GetObb(), hovership_->GetObb()))
-			{
-				return true;
-			}
-		}
-
-		// player is dead
-		return false;
-	}
-
-	bool GameObjectManager::CollisionSpherical(gef::MeshInstance* collider_mesh_1_, gef::MeshInstance* collider_mesh_2_)
+	bool GameObjectManager::CollisionSpherical(gef::MeshInstance* collider_mesh_1, gef::MeshInstance* collider_mesh_2)
 	{
 		// Calculate the squared distance between the centers of both spheres
-		gef::Vector4 collider_1_pos = collider_mesh_1_->mesh()->bounding_sphere().position().Transform(collider_mesh_1_->transform());
-		gef::Vector4 collider_2_pos = collider_mesh_2_->mesh()->bounding_sphere().position().Transform(collider_mesh_2_->transform());
+		gef::Vector4 collider_1_pos = collider_mesh_1->mesh()->bounding_sphere().position().Transform(collider_mesh_1->transform());
+		gef::Vector4 collider_2_pos = collider_mesh_2->mesh()->bounding_sphere().position().Transform(collider_mesh_2->transform());
 		float distance_squared = gef::Vector4(collider_1_pos - collider_2_pos).LengthSqr();
 
 		// Calculate the squared sum of both radii
-		float radii_sum_squared = collider_mesh_1_->mesh()->bounding_sphere().radius() + collider_mesh_2_->mesh()->bounding_sphere().radius();
+		float radii_sum_squared = collider_mesh_1->mesh()->bounding_sphere().radius() + collider_mesh_2->mesh()->bounding_sphere().radius();
 		radii_sum_squared *= radii_sum_squared;
 
 		// if the the distance squared is less than or equal to the square sum of the radii, then there is a collision
@@ -133,16 +130,16 @@ namespace hovar
 		return false;
 	}
 
-	bool GameObjectManager::CollisionOOBB(obb::OBB * collider_obb_1_, obb::OBB * collider_obb_2_)
+	bool GameObjectManager::CollisionOOBB(obb::OBB * collider_obb_1, obb::OBB * collider_obb_2)
 	{
-		if (collider_obb_1_->OBBOverlap(
-			collider_obb_1_->E,
-			collider_obb_1_->O,
-			collider_obb_1_->GetBasis(),
+		if (collider_obb_1->OBBOverlap(
+			collider_obb_1->E,
+			collider_obb_1->O,
+			collider_obb_1->GetBasis(),
 
-			collider_obb_2_->E,
-			collider_obb_2_->O,
-			collider_obb_2_->GetBasis()))
+			collider_obb_2->E,
+			collider_obb_2->O,
+			collider_obb_2->GetBasis()))
 		{
 			return true;
 		}

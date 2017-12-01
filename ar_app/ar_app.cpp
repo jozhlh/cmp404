@@ -13,12 +13,6 @@ void ARApp::Init()
 	main_scene_ = new hovar::MainLevel();
 	current_scene_ = splash_scene_;
 	current_scene_->Init(&platform_);
-	/* override for main game
-
-	main_scene_ = new hovar::MainLevel();
-	current_scene_ = main_scene_;
-	current_scene_->Init(&platform_);
-	*/
 }
 
 void ARApp::CleanUp()

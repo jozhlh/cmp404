@@ -53,18 +53,21 @@ namespace hovar
 		// create tracked object manager
 		game_object_manager_ = new GameObjectManager();
 
-		// create mesh transform
+		// create art asset offset transform
 		float mv_scale = 0.00238f * 0.45f;
 		gef::Transform mv_transform;
 		mv_transform.set_scale(gef::Vector4(mv_scale, mv_scale, mv_scale));
 		mv_transform.set_rotation_eulers(gef::Vector4(90.0f, 0.0f, 0.0f));
 		mv_transform.set_translation(gef::Vector4(0.0f, 0.0f, 0.0f));
 
-		gef::Matrix44 mesh_transform;
+		// import road segment assets
 		road_model_ = new gef::Model();
 		parent_model_ = new gef::Model();
 		road_mesh_ = obj_loader_.LoadOBJToMesh("roadDefault.obj", *platform_, road_model_);
 		parent_mesh_ = obj_loader_.LoadOBJToMesh("roadParent.obj", *platform_, parent_model_);
+		
+		// create and initialise each road marker object
+		gef::Matrix44 mesh_transform;
 		for (int r = 0; r < NUM_OF_MARKERS; r++)
 		{
 			mesh_transform.SetIdentity();
@@ -120,6 +123,8 @@ namespace hovar
 	{
 		fps_ = 1.0f / frame_time;
 		input_manager_->Update();
+
+		// The main game logic
 		if (game_state_ == running)
 		{
 			score_ += frame_time;
@@ -128,6 +133,7 @@ namespace hovar
 			// use the tracking library to try and find markers
 			smartUpdate(dat->currentImage);
 
+			// update all marker information
 			for (int marker_id = 0; marker_id < NUM_OF_MARKERS; marker_id++)
 			{
 				// check to see if a marker is being tracked
@@ -147,9 +153,9 @@ namespace hovar
 					game_object_manager_->SetMarkerVisiblity(marker_id, false);
 				}
 			}
-
 			game_object_manager_->UpdateMarkerData();
-
+			
+			// Update player and roads
 			player_character_->Update(input_manager_->controller_input()->GetController(0), frame_time);
 
 			for (int r = 0; r < NUM_OF_MARKERS; r++)
@@ -157,6 +163,7 @@ namespace hovar
 				road_[r]->Update();
 			}
 
+			// Collision detection
 			if (!game_object_manager_->PlayerRoadCollision(frame_time))
 			{
 				if (player_character_->IsAlive())
@@ -172,8 +179,11 @@ namespace hovar
 				game_object_manager_->FindNewParent();
 				score_ += 10.0f;
 			}
+
+			// Update pickups
 			pickup_manager_->Update(frame_time);
 
+			// Check plyer is alive
 			if (player_character_->GetEnergy() < 0.0f)
 			{
 				game_state_ = finished;
@@ -181,6 +191,7 @@ namespace hovar
 
 			sampleUpdateEnd(dat);
 		}
+		// the game over logic
 		else
 		{
 			// wait for user to press x or o
@@ -218,26 +229,7 @@ namespace hovar
 		sampleRenderEnd();
 	}
 
-	void MainLevel::DrawHUD()
-	{
-		if (font_)
-		{
-			// fps counter
-			font_->RenderText(sprite_renderer_, 
-							  gef::Vector4(DISPLAY_WIDTH - 10.0f, 10.0f, -0.9f), 1.0f,
-							  0xffffffff, gef::TJ_RIGHT, "FPS: %.1f", fps_);
-
-			// energy level
-			font_->RenderText(sprite_renderer_,
-				gef::Vector4(10.0f, 10.0f, -0.9f), 1.0f,
-				0xffffffff, gef::TJ_LEFT, "ENERGY: %.0f", player_character_->GetEnergy());
-
-			// score
-			font_->RenderText(sprite_renderer_,
-				gef::Vector4(DISPLAY_WIDTH * 0.5f, 10.0f, -0.9f), 1.0f,
-				0xffffffff, gef::TJ_CENTRE, "SCORE: %.0f", score_);
-		}
-	}
+	
 
 	void MainLevel::RenderCameraFeed(struct ::AppData* dat)
 	{
@@ -298,6 +290,27 @@ namespace hovar
 		sprite_renderer_->Begin(false);
 		DrawHUD();
 		sprite_renderer_->End();
+	}
+
+	void MainLevel::DrawHUD()
+	{
+		if (font_)
+		{
+			// fps counter
+			font_->RenderText(sprite_renderer_,
+				gef::Vector4(DISPLAY_WIDTH - 10.0f, 10.0f, -0.9f), 1.0f,
+				0xffffffff, gef::TJ_RIGHT, "FPS: %.1f", fps_);
+
+			// energy level
+			font_->RenderText(sprite_renderer_,
+				gef::Vector4(10.0f, 10.0f, -0.9f), 1.0f,
+				0xffffffff, gef::TJ_LEFT, "ENERGY: %.0f", player_character_->GetEnergy());
+
+			// score
+			font_->RenderText(sprite_renderer_,
+				gef::Vector4(DISPLAY_WIDTH * 0.5f, 10.0f, -0.9f), 1.0f,
+				0xffffffff, gef::TJ_CENTRE, "SCORE: %.0f", score_);
+		}
 	}
 
 	void MainLevel::RenderGameOver()
@@ -389,12 +402,6 @@ namespace hovar
 		{
 			delete camera_display_;
 			camera_display_ = NULL;
-		}
-
-		if (camera_texture_)
-		{
-			//delete camera_texture_;
-			//camera_texture_ = NULL;
 		}
 
 		if (game_object_manager_)

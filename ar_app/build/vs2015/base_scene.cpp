@@ -36,5 +36,6 @@ namespace hovar
 
 	void BaseScene::Render()
 	{
+		// Nothing to render by default.
 	}
 }

@@ -21,7 +21,32 @@ namespace hovar
 		m_local_transform_ = NULL;
 	}
 
-	// Updates the position of the game object
+	void GameObject::UpdateMeshTransform()
+	{
+		transform_ = m_mv_transform_.GetMatrix() * m_transform_->GetMatrix();
+		if (collider_ != NULL)
+		{
+			collider_->set_transform(collider_offset_ * m_transform_->GetMatrix());
+		}
+		if (obb_ != NULL)
+		{
+			obb_->SetCoordinateFrameFromMatrix(collider_offset_ * m_transform_->GetMatrix(), tag_);
+		}
+	}
+
+	void GameObject::Update()
+	{
+		SetTransformFromMatrix(m_local_transform_->GetMatrix() * parent_transform_);
+	}
+
+	void GameObject::Render(gef::Renderer3D * renderer)
+	{
+		if (parent_visible_)
+		{
+			renderer->DrawMesh(*this);
+		}
+	}
+
 	void GameObject::UpdateVelocity()
 	{
 		gef::Vector4 new_position = m_local_transform_->translation();
@@ -45,80 +70,18 @@ namespace hovar
 		}
 	}
 
-	float GameObject::ApplyDragWithDeadZone(float current_speed, float dead_limits)
-	{
-		if (current_speed > dead_limits)
-		{
-			current_speed -= drag_;
-		}
-		else if (current_speed < (-1 * dead_limits))
-		{
-			current_speed += drag_;
-		}
-
-		if ((current_speed <= dead_limits) && (current_speed >= (-1 * dead_limits)))
-		{
-			current_speed = 0.0f;
-		}
-		return current_speed;
-	}
-
-	void GameObject::UpdateMeshTransform()
-	{
-		transform_ = m_mv_transform_.GetMatrix() * m_transform_->GetMatrix();
-		if (collider_ != NULL)
-		{
-			collider_->set_transform(collider_offset_ * m_transform_->GetMatrix());
-		}
-		if (obb_ != NULL)
-		{
-			obb_->SetCoordinateFrameFromMatrix(collider_offset_ * m_transform_->GetMatrix(), tag_);
-		}
-	}
-
-	void GameObject::Update()
-	{
-		SetTransformFromMatrix(m_local_transform_->GetMatrix() * parent_transform_);
-	}
-
-
-	void GameObject::Translate(gef::Vector4 translationVector)
+	void GameObject::Translate(gef::Vector4 translation_vector)
 	{
 		gef::Vector4 new_position = m_transform_->translation();
-		m_transform_->set_translation(new_position += translationVector);
+		m_transform_->set_translation(new_position += translation_vector);
 		UpdateMeshTransform();
 	}
 
-	void GameObject::Rotate(gef::Vector4 eulerRotation)
+	void GameObject::Rotate(gef::Vector4 euler_rotation)
 	{
-		m_transform_->Rotate(eulerRotation);
+		m_transform_->Rotate(euler_rotation);
 		UpdateMeshTransform();
 	}
-
-	std::list<gef::MeshInstance*> GameObject::GetWallCubes()
-	{
-		return std::list<gef::MeshInstance*>();
-	}
-
-	std::list<obb::OBB*> GameObject::GetWallObbs()
-	{
-		return std::list<obb::OBB*>();
-	}
-
-	void GameObject::Render(gef::Renderer3D * renderer)
-	{
-		if (parent_visible_)
-		{
-			renderer->DrawMesh(*this);
-		}
-	}
-
-	void GameObject::SetTransformFromMatrix(gef::Matrix44 transformation_matrix)
-	{
-		m_transform_->Set(transformation_matrix);
-		UpdateMeshTransform();
-	}
-
 
 	void GameObject::SetLocalTransformFromMatrix(gef::Matrix44 transformation_matrix)
 	{
@@ -139,6 +102,40 @@ namespace hovar
 
 		obb_ = new obb::OBB(obb::Vector(0.5f * collider_size.x(), 0.5f * collider_size.z(), 0.5f * collider_size.y()));
 		obb_->SetCoordinateFrameFromMatrix(collider_offset_, tag_);
+	}
+
+	void GameObject::SetTransformFromMatrix(gef::Matrix44 transformation_matrix)
+	{
+		m_transform_->Set(transformation_matrix);
+		UpdateMeshTransform();
+	}
+
+	float GameObject::ApplyDragWithDeadZone(float current_speed, float dead_limits)
+	{
+		if (current_speed > dead_limits)
+		{
+			current_speed -= drag_;
+		}
+		else if (current_speed < (-1 * dead_limits))
+		{
+			current_speed += drag_;
+		}
+
+		if ((current_speed <= dead_limits) && (current_speed >= (-1 * dead_limits)))
+		{
+			current_speed = 0.0f;
+		}
+		return current_speed;
+	}
+
+	std::list<gef::MeshInstance*> GameObject::GetWallCubes()
+	{
+		return std::list<gef::MeshInstance*>();
+	}
+	s
+	std::list<obb::OBB*> GameObject::GetWallObbs()
+	{
+		return std::list<obb::OBB*>();
 	}
 }
 

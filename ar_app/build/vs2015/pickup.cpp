@@ -4,8 +4,8 @@ namespace hovar
 {
 	Pickup::Pickup()
 	{
-		collected = false;
-		energy = 20.0f;
+		collected_ = false;
+		energy_ = 20.0f;
 	}
 
 

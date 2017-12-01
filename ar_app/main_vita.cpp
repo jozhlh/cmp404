@@ -6,6 +6,7 @@ unsigned int sceLibcHeapSize = 128*1024*1024;	// Sets up the heap area size as 1
 #pragma comment(lib, "SceCamera_stub")
 #pragma comment(lib, "SceMotion_stub")
 
+/// Entry point into the program
 int main(void)
 {
 	// initialisation
