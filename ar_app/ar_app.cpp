@@ -10,7 +10,6 @@ ARApp::ARApp(gef::Platform& platform) :
 void ARApp::Init()
 {
 	splash_scene_ = new hovar::SplashScene();
-	//main_scene_ = new hovar::MainLevel();
 	current_scene_ = splash_scene_;
 	current_scene_->Init(&platform_);
 }

@@ -115,20 +115,11 @@ namespace hovar
 		/// List of tracked objects which are bound to a specific marker
 		std::list<GameObject*> marker_specific_objects_;
 
-	// UNUSED ??? ///
-		//gef::Matrix44 marker_displacement_;
-
 		/// The last known transforms of all markers
 		gef::Matrix44 marker_transform_matrices_[NUM_OF_MARKERS];
 
 		/// Each marker's visibility status
 		bool markers_visible_[NUM_OF_MARKERS];
-
-		/// Amount of time to wait before allowing reassigning reference marker
-		//float overlap_allowance_;
-
-		/// Time since reference marker was reassigned
-		//float overlap_counter_;
 
 		/// ID of the current reference marker
 		int current_parent_ID_;

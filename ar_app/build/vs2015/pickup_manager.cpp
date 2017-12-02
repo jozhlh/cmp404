@@ -8,10 +8,8 @@ namespace hovar
 {
 	PickupManager::PickupManager()
 	{
-		//spawn_frequency_ = 5.0f;
 		pickups_per_spawn_ = 2;
 		spawn_radius_ = 0.2f;
-		//spawn_counter_ = 0.0f;
 		ready_to_spawn_ = true;
 		srand(time(NULL));
 	}

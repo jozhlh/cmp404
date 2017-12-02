@@ -34,7 +34,6 @@ namespace hovar
 		if (input_manager_->controller_input()->GetController(0)->buttons_down() & gef_SONY_CTRL_CROSS)
 		{
 			// Load Next Scene
-			std::cout << "x pressed" << std::endl;
 			return false;
 		}
 		return true;

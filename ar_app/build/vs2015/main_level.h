@@ -48,7 +48,7 @@ namespace hovar
 		/// @brief Main gameplay loop.
 		/// @note Performs all gameplay logic.
 		/// @param[in] frame_time	Time since the last update function (delta time).
-		/// @return false if player wishes to quit to main menu.
+		/// @return False if player wishes to quit to main menu.
 		bool Update(const float frame_time);
 
 		/// @brief Renders scene.
@@ -71,9 +71,22 @@ namespace hovar
 		/// @note Creates a point light and sets the ambient light.
 		void InitLights();
 
+		/// @brief Executes Collision Detection.
+		/// @note Tests for collisions between the player and roads / pickups.
 		void CheckForCollisions();
+
+		/// @brief Updates marker data.
+		/// @note Looks for AR markers and updates stored data.
 		void UpdateMarkers();
+
+		/// @brief The core game loop.
+		/// @note Runs the logic which occurs whilst the game is running.
+		/// @param[in] dt	Time since the last update function (delta time).
 		void GameLogic(float dt);
+
+		/// @brief The game over loop.
+		/// @note Runs the logic which occurs whilst the game is over.
+		/// @return Returns false if the user has selected to return to main menu.
 		bool GameOverLogic();
 
 		/// @brief Render camera feed.

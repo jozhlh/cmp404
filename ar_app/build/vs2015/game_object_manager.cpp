@@ -9,8 +9,6 @@ namespace hovar
 	{
 		current_parent_ID_ = 0;
 		current_parent_marker_ = NULL;
-		//overlap_allowance_ = 0.3f;
-		//overlap_counter_ = 0.0f;
 		for (int marker_num = 0; marker_num < NUM_OF_MARKERS; marker_num++)
 		{
 			marker_transform_matrices_[marker_num].SetIdentity();

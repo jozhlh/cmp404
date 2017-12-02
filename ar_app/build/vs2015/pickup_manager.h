@@ -107,12 +107,6 @@ namespace hovar
 		/// The pickup scaling factor
 		float pickup_scale_;
 
-		/// How regularly to automatically spawn objects
-		//float spawn_frequency_;
-
-		/// How long since pickups were last spawned
-		//float spawn_counter_;
-
 		/// How far away from the centre point pickups can be spawned
 		float spawn_radius_;
 

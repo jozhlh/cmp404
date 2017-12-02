@@ -52,7 +52,7 @@ namespace hovar
 
 		// create tracked object manager
 		game_object_manager_ = new GameObjectManager();
-
+		
 		// create art asset offset transform
 		float mv_scale = 0.00238f * 0.45f;
 		gef::Transform mv_transform;

@@ -45,12 +45,6 @@ namespace hovar
 		/// @param[in]	renderer	The 3D rendering engine.
 		virtual void Render(gef::Renderer3D* renderer);
 
-	/* <To be deleted> 
-		virtual std::list<gef::MeshInstance*> GetWallCubes();
-		virtual std::list<obb::OBB*> GetWallObbs();
-	 </To be deleted> */
-
-
 	/* <Move to player character?> */
 		/// @brief Updates position.
 		/// @note Uses the current velocity to update the position.
@@ -70,10 +64,6 @@ namespace hovar
 		/// @brief Adds acceleration to velocity.
 		/// @param[in]	acceleration	The amount to increase velocity.
 		void ApplyAcceleration(gef::Vector4 acceleration) { velocity_ += acceleration; }
-		
-		/// @brief Moves the game object.
-		/// @param[in]	translation_vector	The amount to move the object.
-		//void Translate(gef::Vector4 translation_vector);
 
 		/// @brief Set the velocity to zero.
 		void Stop() { velocity_ = velocity_.kZero; }
