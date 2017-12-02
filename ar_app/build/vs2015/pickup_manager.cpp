@@ -49,41 +49,24 @@ namespace hovar
 		}
 	}
 
-	void PickupManager::CleanupActivePickups()
+	bool PickupManager::PlayerPickupCollision(PlayerCharacter * player)
 	{
 		for (std::list<Pickup*>::iterator pickup = active_pickups_.begin(); pickup != active_pickups_.end(); ++pickup)
 		{
-			object_manager_->StopTrackingObject(*pickup);
-			(*pickup)->~Pickup();
-			delete (*pickup);
+			// if the pickup has not been collected
+			if (!(*pickup)->IsCollected())
+			{
+				// player has collected pickup
+				if (CollisionOOBB(player->GetObb(), (*pickup)->GetObb()))
+				{
+					ready_to_spawn_ = true;
+					player->GiveEnergy((*pickup)->Energy());
+					(*pickup)->SetCollected(true);
+					return true;
+				}
+			}
 		}
-		active_pickups_.clear();
-	}
-
-	bool PickupManager::CollisionOOBB(obb::OBB * collider_obb_1_, obb::OBB * collider_obb_2_)
-	{
-		if (collider_obb_1_->OBBOverlap(
-			collider_obb_1_->E,
-			collider_obb_1_->O,
-			collider_obb_1_->GetBasis(),
-
-			collider_obb_2_->E,
-			collider_obb_2_->O,
-			collider_obb_2_->GetBasis()))
-		{
-			std::cout << collider_obb_1_->O.x << " " << collider_obb_1_->O.y << " " << collider_obb_1_->O.z << " size " << collider_obb_1_->E.x << " " << collider_obb_1_->E.y << " " << collider_obb_1_->E.z << std::endl;
-			std::cout << collider_obb_2_->O.x << " " << collider_obb_2_->O.y << " " << collider_obb_2_->O.z << " size " << collider_obb_2_->E.x << " " << collider_obb_2_->E.y << " " << collider_obb_2_->E.z << std::endl << std::endl;
-			return true;
-		}
-	}
-
-	gef::Vector4 PickupManager::GetSpawnLocation(float x_dimensions, float y_dimensions)
-	{
-		gef::Vector4 spawn_pos;
-		spawn_pos.set_x(-x_dimensions + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (x_dimensions + x_dimensions))));
-		spawn_pos.set_y(-y_dimensions + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (y_dimensions + y_dimensions))));
-		spawn_pos.set_z(0.02f);
-		return spawn_pos;
+		return false;
 	}
 
 	void PickupManager::SpawnNewPickups()
@@ -95,6 +78,17 @@ namespace hovar
 			object_manager_->TrackObject(pickup);
 			active_pickups_.push_back(pickup);
 		}
+	}
+
+	void PickupManager::CleanupActivePickups()
+	{
+		for (std::list<Pickup*>::iterator pickup = active_pickups_.begin(); pickup != active_pickups_.end(); ++pickup)
+		{
+			object_manager_->StopTrackingObject(*pickup);
+			(*pickup)->~Pickup();
+			delete (*pickup);
+		}
+		active_pickups_.clear();
 	}
 
 	Pickup * PickupManager::CreatePickup()
@@ -121,24 +115,30 @@ namespace hovar
 		return new_pickup_;
 	}
 
-	bool PickupManager::PlayerPickupCollision(PlayerCharacter * player)
+	gef::Vector4 PickupManager::GetSpawnLocation(float x_dimensions, float y_dimensions)
 	{
-		for (std::list<Pickup*>::iterator pickup = active_pickups_.begin(); pickup != active_pickups_.end(); ++pickup)
+		gef::Vector4 spawn_pos;
+		spawn_pos.set_x(-x_dimensions + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (x_dimensions + x_dimensions))));
+		spawn_pos.set_y(-y_dimensions + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (y_dimensions + y_dimensions))));
+		spawn_pos.set_z(0.02f);
+		return spawn_pos;
+	}
+
+	bool PickupManager::CollisionOOBB(obb::OBB * collider_obb_1_, obb::OBB * collider_obb_2_)
+	{
+		if (collider_obb_1_->OBBOverlap(
+			collider_obb_1_->E,
+			collider_obb_1_->O,
+			collider_obb_1_->GetBasis(),
+
+			collider_obb_2_->E,
+			collider_obb_2_->O,
+			collider_obb_2_->GetBasis()))
 		{
-			// if the pickup has not been collected
-			if (!(*pickup)->IsCollected())
-			{
-				// player has collected pickup
-				if (CollisionOOBB(player->GetObb(), (*pickup)->GetObb()))
-				{
-					ready_to_spawn_ = true;
-					player->GiveEnergy((*pickup)->Energy());
-					(*pickup)->SetCollected(true);
-					return true;
-				}
-			}
+			std::cout << collider_obb_1_->O.x << " " << collider_obb_1_->O.y << " " << collider_obb_1_->O.z << " size " << collider_obb_1_->E.x << " " << collider_obb_1_->E.y << " " << collider_obb_1_->E.z << std::endl;
+			std::cout << collider_obb_2_->O.x << " " << collider_obb_2_->O.y << " " << collider_obb_2_->O.z << " size " << collider_obb_2_->E.x << " " << collider_obb_2_->E.y << " " << collider_obb_2_->E.z << std::endl << std::endl;
+			return true;
 		}
-		return false;
 	}
 }
 

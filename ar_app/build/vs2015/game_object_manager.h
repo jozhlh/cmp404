@@ -115,7 +115,7 @@ namespace hovar
 		/// List of tracked objects which are bound to a specific marker
 		std::list<GameObject*> marker_specific_objects_;
 
-		// UNUSED ??? ///
+	// UNUSED ??? ///
 		gef::Matrix44 marker_displacement_;
 
 		/// The last known transforms of all markers
