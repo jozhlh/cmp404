@@ -1,3 +1,12 @@
+/*
+	ar_app.h
+
+	Application class which runs the hovar game.
+
+	@author	Josh Hale 
+	Last Edited: 02/12/17
+*/
+
 #ifndef _RENDER_TARGET_APP_H
 #define _RENDER_TARGET_APP_H
 

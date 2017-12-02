@@ -1,3 +1,12 @@
+/*
+	ar_app.cpp
+
+	Application class which runs the hovar game.
+
+	@author	Josh Hale
+	Last Edited: 02/12/17
+*/
+
 #include "ar_app.h"
 
 #include <iostream>
