@@ -1,3 +1,12 @@
+/*
+	cube_mesh.h
+
+	Builder which creates a cube object.
+
+	@author	Josh Hale
+	Last Edited: 02/12/17
+*/
+
 #ifndef _CUBE_MESH_H
 #define _CUBE_MESH_H
 
@@ -11,7 +20,7 @@ namespace gef
 namespace hovar
 {
 	/**
-	Builder which creates a cube object
+	Builder which creates a cube object.
 	*/
 	class CubeMesh
 	{
@@ -31,5 +40,5 @@ namespace hovar
 		gef::Mesh* CreateCubeMesh(float width, float length, float height, gef::Platform& platform);
 	};
 }
-#endif
+#endif //_CUBE_MESH_H
 

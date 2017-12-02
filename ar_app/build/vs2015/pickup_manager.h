@@ -1,3 +1,12 @@
+/*
+	pickup_manager.h
+
+	Manages the spawning and collision of collectable items.
+
+	@author	Josh Hale
+	Last Edited: 02/12/17
+*/
+
 #ifndef _PICKUP_MANAGER_H
 #define _PICKUP_MANAGER_H
 
@@ -117,5 +126,5 @@ namespace hovar
 		bool ready_to_spawn_;
 	};
 }
-#endif
+#endif //_PICKUP_MANAGER_H
 

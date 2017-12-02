@@ -1,3 +1,12 @@
+/*
+	road_segment.h
+
+	The objects which are attached to specific markers.
+
+	@author	Josh Hale
+	Last Edited: 02/12/17
+*/
+
 #ifndef _ROAD_SEGMENT_H
 #define _ROAD_SEGMENT_H
 
@@ -50,5 +59,5 @@ namespace hovar
 		gef::Mesh* parent_mesh_;
 	};
 }
-#endif
+#endif //_ROAD_SEGMENT_H
 

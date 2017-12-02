@@ -1,4 +1,19 @@
-#pragma once
+/*
+	coordinate_frame.h
+	
+	Based on the class provided at this link:
+	https://www.gamasutra.com/view/feature/131761/c_data_structures_for_rigidbody_.php?page=5
+	C++ Data Structures for Rigid-Body Physics: The COORDINATE_FRAME Type
+	Author: Miguel Gomez
+	02/07/99
+
+	@author	Miguel Gomez, Josh Hale
+	Last Edited: 02/12/17
+*/
+
+#ifndef _COORDINATE_FRAME_H
+#define _COORDINATE_FRAME_H
+
 #include "basis.h"
 
 namespace obb
@@ -42,4 +57,4 @@ namespace obb
 			}
 	};
 }
-
+#endif _COORDINATE_FRAME_H

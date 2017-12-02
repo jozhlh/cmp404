@@ -1,5 +1,14 @@
-#ifndef SPLASH_SCENE_H_
-#define SPLASH_SCENE_H_
+/*
+	splash_scene.h
+
+	First scene to be loaded.
+
+	@author	Josh Hale
+	Last Edited: 02/12/17
+*/
+
+#ifndef _SPLASH_SCENE_H
+#define _SPLASH_SCENE_H
 
 #include "base_scene.h"
 
@@ -64,5 +73,5 @@ namespace hovar
 	};
 }
 
-#endif
+#endif //_SPLASH_SCENE_H
 

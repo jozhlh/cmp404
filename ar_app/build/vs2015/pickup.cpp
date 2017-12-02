@@ -1,3 +1,12 @@
+/*
+	pickup.cpp
+
+	Collectable items which recharge the player.
+
+	@author	Josh Hale
+	Last Edited: 02/12/17
+*/
+
 #include "pickup.h"
 
 namespace hovar

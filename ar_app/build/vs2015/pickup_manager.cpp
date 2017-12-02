@@ -1,3 +1,12 @@
+/*
+	pickup_manager.cpp
+
+	Manages the spawning and collision of collectable items.
+
+	@author	Josh Hale
+	Last Edited: 02/12/17
+*/
+
 #include "pickup_manager.h"
 #include <graphics\mesh.h>
 #include <cstdlib>

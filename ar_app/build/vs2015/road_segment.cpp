@@ -1,3 +1,12 @@
+/*
+	road_segment.cpp
+
+	The objects which are attached to specific markers.
+
+	@author	Josh Hale
+	Last Edited: 02/12/17
+*/
+
 #include "road_segment.h"
 
 namespace hovar

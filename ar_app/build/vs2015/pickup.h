@@ -1,3 +1,12 @@
+/*
+	pickup.h
+
+	Collectable items which recharge the player.
+
+	@author	Josh Hale
+	Last Edited: 02/12/17
+*/
+
 #ifndef _PICKUP_H
 #define _PICKUP_H
 
@@ -49,5 +58,5 @@ namespace hovar
 	};
 }
 
-#endif // !_PICKUP_H
+#endif //_PICKUP_H
 

@@ -1,3 +1,12 @@
+/*
+	cube_mesh.cpp
+
+	Builder which creates a cube object.
+
+	@author	Josh Hale
+	Last Edited: 02/12/17
+*/
+
 #include "cube_mesh.h"
 #include <system\platform.h>
 #include <graphics\mesh.h>

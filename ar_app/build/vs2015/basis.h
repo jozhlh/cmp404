@@ -1,5 +1,18 @@
-#ifndef BASIS_H_
-#define BASIS_H_
+/*
+	basis.h
+	
+	Based on the class provided at this link:
+	https://www.gamasutra.com/view/feature/131761/c_data_structures_for_rigidbody_.php?page=4
+	C++ Data Structures for Rigid-Body Physics: The BASIS Type
+	Author: Miguel Gomez
+	02/07/99
+
+	@author	Miguel Gomez, Josh Hale
+	Last Edited: 02/12/17
+*/
+
+#ifndef _BASIS_H
+#define _BASIS_H
 
 #include "matrix.h"
 #include "vector.h"
@@ -25,12 +38,14 @@ namespace obb
 		const Vector& y() const { return R.C[1]; }
 		const Vector& z() const { return R.C[2]; }
 		const Matrix& basis() const { return R; }
+
 		void SetBasis(const Vector& v0, const Vector& v1, const Vector& v2)
 		{
 			this->R[0] = v0;
 			this->R[1] = v1;
 			this->R[2] = v2;
 		}
+
 		Vector* GetBasis()
 		{
 			Vector* basis_as_vectors = new Vector[3];
@@ -46,8 +61,6 @@ namespace obb
 		//rotate, length of da is theta, unit direction of da is u
 		void rotate(const Vector& da);
 
-
-
 		// Transformations
 		const Vector transformVectorToLocal(const Vector& v) const
 		{
@@ -61,5 +74,5 @@ namespace obb
 	};
 }
 
-#endif
+#endif //_BASIS_H
 

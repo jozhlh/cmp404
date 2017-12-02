@@ -1,5 +1,14 @@
-#ifndef _BASE_SCENE_H_
-#define _BASE_SCENE_H_
+/*
+	base_scene.h
+
+	All default scene functionality is contained in the base scene class.
+
+	@author	Josh Hale
+	Last Edited: 02/12/17
+*/
+
+#ifndef _BASE_SCENE_H
+#define _BASE_SCENE_H
 
 #include "input\input_manager.h"
 
@@ -51,5 +60,5 @@ namespace hovar
 }
 
 
-#endif //_BASE_SCENE_H_
+#endif //_BASE_SCENE_H
 

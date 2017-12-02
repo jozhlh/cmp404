@@ -1,4 +1,13 @@
-﻿#include "player_character.h"
+﻿/*
+	player_character.cpp
+
+	The player controlled vehicle.
+
+	@author	Josh Hale
+	Last Edited: 02/12/17
+*/
+
+#include "player_character.h"
 #include <iostream>
 #include "graphics\mesh.h"
 #define STICK_DEAD_ZONE 0.05f

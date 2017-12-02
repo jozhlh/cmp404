@@ -1,3 +1,12 @@
+/*
+	game_object.h
+
+	The default functionality of all objects in the game.
+
+	@author	Josh Hale
+	Last Edited: 02/12/17
+*/
+
 #ifndef _GAME_OBJECT_H
 #define _GAME_OBJECT_H
 
@@ -203,4 +212,4 @@ namespace hovar
 		int parent_marker_id_;
 	};
 }
-#endif
+#endif //_GAME_OBJECT_H

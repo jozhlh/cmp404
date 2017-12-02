@@ -1,3 +1,12 @@
+/*
+	player_character.h
+
+	The player controlled vehicle.
+
+	@author	Josh Hale
+	Last Edited: 02/12/17
+*/
+
 #ifndef _PLAYER_CHARACTER_H
 #define _PLAYER_CHARACTER_H
 
@@ -12,10 +21,10 @@ namespace hovar
 	class PlayerCharacter : public GameObject
 	{
 	private:
-		/// States that the player can be in
-		/// alive	The player's default state
-		/// pickup	The player just collected a pickup
-		/// dead	The player just left a road
+		/// States that the player can be in.
+		/// alive	The player's default state.
+		/// pickup	The player just collected a pickup.
+		/// dead	The player just left a road.
 		enum State
 		{
 			alive,
@@ -92,46 +101,46 @@ namespace hovar
 
 		/// @brief Gets input from controller.
 		/// @note Checks face buttons for acceleration and applies this to forward vector.
-		/// Also checks left analogue stick for information on how much to rotate the player
+		/// Also checks left analogue stick for information on how much to rotate the player.
 		/// @param[in] controller	The controller to read for input.
 		/// @param[in] dt			Time since the last update function (delta time).
 		gef::Vector4 Input(const gef::SonyController* controller, float dt);
 		
-		/// The local position the player is reset to after death
+		/// The local position the player is reset to after death.
 		gef::Matrix44 respawn_position_;
 
-		/// The current state of the player
+		/// The current state of the player.
 		State state_;
 
-		/// How long since the player died
+		/// How long since the player died.
 		float dead_counter_;
 
-		/// How long since the player collected a pickup
+		/// How long since the player collected a pickup.
 		float pickup_counter_;
 
-		/// How long the death sequence lasts
+		/// How long the death sequence lasts.
 		float dead_duration_;
 
-		/// How long the pickup collected sequence lasts
+		/// How long the pickup collected sequence lasts.
 		float pickup_duration_;
 
-		/// The current energy level of the player
+		/// The current energy level of the player.
 		float current_energy_;
 
-		/// How much the enrgy level decreases per second
+		/// How much the enrgy level decreases per second.
 		float energy_decay_rate_;
 
-		/// The fastest the player can move in any one direction
+		/// The fastest the player can move in any one direction.
 		float max_speed_;
 
-		/// How quickly the accelerator moves the player forward
+		/// How quickly the accelerator moves the player forward.
 		float acceleration_;
 
-		/// How quickly the decelerator stops and moves the player backward
+		/// How quickly the decelerator stops and moves the player backward.
 		float deceleration_;
 
-		/// How quickly the player rotates
+		/// How quickly the player rotates.
 		float turning_speed_;
 	};
 }
-#endif
+#endif //_PLAYER_CHARACTER_H

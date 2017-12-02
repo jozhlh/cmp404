@@ -1,3 +1,12 @@
+/*
+	base_scene.cpp
+
+	All default scene functionality is contained in the base scene class.
+
+	@author	Josh Hale
+	Last Edited: 02/12/17
+*/
+
 #include "base_scene.h"
 #include "system\platform.h"
 

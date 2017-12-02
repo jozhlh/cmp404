@@ -1,5 +1,18 @@
-#ifndef MATRIX_H_
-#define MATRIX_H_
+/*
+	matrix.h
+
+	Based on the class provided at this link:
+	https://www.gamasutra.com/view/feature/131761/c_data_structures_for_rigidbody_.php?page=3
+	C++ Data Structures for Rigid-Body Physics: The MATRIX Type
+	Author: Miguel Gomez
+	02/07/99
+
+	@author	Miguel Gomez, Josh Hale
+	Last Edited: 02/12/17
+*/
+
+#ifndef _MATRIX_H
+#define _MATRIX_H
 
 #include "vector.h"
 
@@ -159,5 +172,5 @@ namespace obb
 		const Matrix inverse() const;
 	};
 }
-#endif
+#endif //_MATRIX_H
 

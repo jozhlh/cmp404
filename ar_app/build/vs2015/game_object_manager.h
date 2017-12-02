@@ -1,3 +1,12 @@
+/*
+	game_object_manger.h
+
+	Tracks and controls all functionality for all game objects.
+
+	@author	Josh Hale
+	Last Edited: 02/12/17
+*/
+
 #ifndef _GAME_OBJECT_MANAGER_H
 #define _GAME_OBJECT_MANAGER_H
 
@@ -10,7 +19,7 @@
 namespace hovar
 {
 	/**
-	Tracks all game objects.
+	Tracks and controls all functionality for all game objects.
 	*/
 	class GameObjectManager
 	{
@@ -125,6 +134,6 @@ namespace hovar
 		int current_parent_ID_;
 	};
 }
-#endif // !_GAME_OBJECT_MANAGER_H
+#endif //_GAME_OBJECT_MANAGER_H
 
 

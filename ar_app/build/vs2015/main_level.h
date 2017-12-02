@@ -1,5 +1,14 @@
-#ifndef MAIN_LEVEL_H_
-#define MAIN_LEVEL_H_
+/*
+	main_level.h
+
+	Main level which runs the game.
+
+	@author	Josh Hale
+	Last Edited: 02/12/17
+*/
+
+#ifndef _MAIN_LEVEL_H
+#define _MAIN_LEVEL_H
 
 #include "base_scene.h"
 
@@ -165,6 +174,5 @@ namespace hovar
 	};
 }
 
-
-#endif
+#endif //_MAIN_LEVEL_H
 

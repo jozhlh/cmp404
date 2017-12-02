@@ -1,16 +1,41 @@
-#pragma once
+/*
+	obb.h
+	
+	Based on the class provided at this link:
+	https://www.gamasutra.com/view/feature/131790/simple_intersection_tests_for_games.php?page=5
+	Simple Intersection Tests For Games: An Oriented Bounding Box (OBB) Intersection Test
+	Author: Miguel Gomez
+	18/10/99
+
+	SetCoordinateFrameFromMatrix function added by Josh Hale.
+	This function converts data from the gef framework to the
+	referenced simple rigid body framework.
+
+	@author	Miguel Gomez, Josh Hale
+	Last Edited: 02/12/17
+*/
+
+#ifndef _OBB_COLLISION_H
+#define _OBB_COLLISION_H
+
 #include "coordinate_frame.h"
 #include "maths\matrix44.h"
 
 #include <iostream>
 
-namespace obb {
+namespace obb
+{
 	class OBB : public CoordinateFrame
 	{
 	public:
 		Vector E; //extents
 		OBB(const Vector& e) : E(e) {}
 
+		/// @brief Initialises coordinate frame.
+		/// @note Uses a gef framework transformation matrix to initialize an obb framework
+		/// coordinate frame.
+		/// @param[in] transformation_matrix	The gef framework transformation matrix.
+		/// @param[in] tag						The tag attributed to the collider.
 		void SetCoordinateFrameFromMatrix(gef::Matrix44 transformation_matrix, std::string tag)
 		{
 			gef::Vector4 gef_origin = transformation_matrix.GetTranslation();
@@ -35,6 +60,7 @@ namespace obb {
 			right.z = gef_right.z();
 			SetCoordinateFrame(origin, right, forward, up);
 		}
+
 		//check if two oriented bounding boxes overlap
 		const bool OBBOverlap
 		(
@@ -156,7 +182,6 @@ namespace obb {
 			return true;
 		}
 	};
-
-	
 }
 
+#endif //_OBB_COLLISION_H

@@ -1,3 +1,12 @@
+/*
+	main_level.cpp
+
+	Main level which runs the game.
+
+	@author	Josh Hale
+	Last Edited: 02/12/17
+*/
+
 #include "main_level.h"
 
 #include <sony_sample_framework.h>

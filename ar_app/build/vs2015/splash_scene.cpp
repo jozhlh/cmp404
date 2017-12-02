@@ -1,3 +1,12 @@
+/*
+	splash_scene.cpp
+
+	First scene to be loaded.
+
+	@author	Josh Hale
+	Last Edited: 02/12/17
+*/
+
 #include "splash_scene.h"
 
 #include <sony_sample_framework.h>

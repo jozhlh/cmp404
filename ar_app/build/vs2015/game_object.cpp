@@ -1,3 +1,12 @@
+/*
+	game_object.cpp
+
+	The default functionality of all objects in the game.
+
+	@author	Josh Hale
+	Last Edited: 02/12/17
+*/
+
 #include "game_object.h"
 
 namespace hovar

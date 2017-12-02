@@ -1,3 +1,12 @@
+/*
+	game_object_manger.cpp
+
+	Tracks and controls all functionality for all game objects.
+
+	@author	Josh Hale
+	Last Edited: 02/12/17
+*/
+
 #include "game_object_manager.h"
 #include <graphics\mesh.h>
 
