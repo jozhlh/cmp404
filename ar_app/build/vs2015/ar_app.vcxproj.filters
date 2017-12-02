@@ -9,11 +9,29 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hpp</Extensions>
     </Filter>
-    <Filter Include="Header Files\OBB">
+    <Filter Include="Source Files\hovar">
+      <UniqueIdentifier>{32b338c3-793a-4e27-b974-2dd584a4e42b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\hovar">
+      <UniqueIdentifier>{cab14f7a-713e-43fb-9b02-6a565cd7be7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\obb">
+      <UniqueIdentifier>{8a0565e5-8b01-442d-915b-e5e77a075cde}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\obb">
       <UniqueIdentifier>{3c25e9d4-8d06-42c4-8a8f-70526ebfb49f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\OBB">
-      <UniqueIdentifier>{8a0565e5-8b01-442d-915b-e5e77a075cde}</UniqueIdentifier>
+    <Filter Include="Header Files\hovar\scenes">
+      <UniqueIdentifier>{5abd6578-98a3-4a63-bd3a-227e232c8d52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\hovar\game_objects">
+      <UniqueIdentifier>{156e2f17-2562-4332-b513-1dc3aca05e91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\hovar\scenes">
+      <UniqueIdentifier>{3f351ba4-f5b7-4be8-9e3e-a5c27cb7af0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\hovar\game_objects">
+      <UniqueIdentifier>{a567d8d1-32f5-4a1a-8d65-532a3cbbadda}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -23,106 +41,106 @@
     <ClCompile Include="..\..\main_vita.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="game_object.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="player_character.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="game_object_manager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="road_segment.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="pickup.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="pickup_manager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="cube_mesh.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="base_scene.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="main_level.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="splash_scene.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="basis.cpp">
-      <Filter>Source Files\OBB</Filter>
+      <Filter>Source Files\obb</Filter>
     </ClCompile>
     <ClCompile Include="vector.cpp">
-      <Filter>Source Files\OBB</Filter>
+      <Filter>Source Files\obb</Filter>
     </ClCompile>
     <ClCompile Include="matrix.cpp">
-      <Filter>Source Files\OBB</Filter>
+      <Filter>Source Files\obb</Filter>
     </ClCompile>
     <ClCompile Include="coordinate_frame.cpp">
-      <Filter>Source Files\OBB</Filter>
+      <Filter>Source Files\obb</Filter>
     </ClCompile>
     <ClCompile Include="obb.cpp">
-      <Filter>Source Files\OBB</Filter>
+      <Filter>Source Files\obb</Filter>
     </ClCompile>
     <ClCompile Include="camera.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\hovar</Filter>
+    </ClCompile>
+    <ClCompile Include="cube_mesh.cpp">
+      <Filter>Source Files\hovar</Filter>
+    </ClCompile>
+    <ClCompile Include="game_object_manager.cpp">
+      <Filter>Source Files\hovar</Filter>
+    </ClCompile>
+    <ClCompile Include="pickup_manager.cpp">
+      <Filter>Source Files\hovar</Filter>
+    </ClCompile>
+    <ClCompile Include="base_scene.cpp">
+      <Filter>Source Files\hovar\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="splash_scene.cpp">
+      <Filter>Source Files\hovar\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="main_level.cpp">
+      <Filter>Source Files\hovar\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="road_segment.cpp">
+      <Filter>Source Files\hovar\game_objects</Filter>
+    </ClCompile>
+    <ClCompile Include="player_character.cpp">
+      <Filter>Source Files\hovar\game_objects</Filter>
+    </ClCompile>
+    <ClCompile Include="pickup.cpp">
+      <Filter>Source Files\hovar\game_objects</Filter>
+    </ClCompile>
+    <ClCompile Include="game_object.cpp">
+      <Filter>Source Files\hovar\game_objects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\ar_app.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="game_object.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="player_character.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="game_object_manager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="road_segment.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="pickup.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="pickup_manager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube_mesh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="base_scene.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="main_level.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="splash_scene.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="basis.h">
-      <Filter>Header Files\OBB</Filter>
+      <Filter>Header Files\obb</Filter>
     </ClInclude>
     <ClInclude Include="vector.h">
-      <Filter>Header Files\OBB</Filter>
+      <Filter>Header Files\obb</Filter>
     </ClInclude>
     <ClInclude Include="matrix.h">
-      <Filter>Header Files\OBB</Filter>
+      <Filter>Header Files\obb</Filter>
     </ClInclude>
     <ClInclude Include="coordinate_frame.h">
-      <Filter>Header Files\OBB</Filter>
+      <Filter>Header Files\obb</Filter>
     </ClInclude>
     <ClInclude Include="obb.h">
-      <Filter>Header Files\OBB</Filter>
+      <Filter>Header Files\obb</Filter>
     </ClInclude>
     <ClInclude Include="camera.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\hovar</Filter>
+    </ClInclude>
+    <ClInclude Include="cube_mesh.h">
+      <Filter>Header Files\hovar</Filter>
+    </ClInclude>
+    <ClInclude Include="game_object_manager.h">
+      <Filter>Header Files\hovar</Filter>
+    </ClInclude>
+    <ClInclude Include="pickup_manager.h">
+      <Filter>Header Files\hovar</Filter>
+    </ClInclude>
+    <ClInclude Include="base_scene.h">
+      <Filter>Header Files\hovar\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="main_level.h">
+      <Filter>Header Files\hovar\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="splash_scene.h">
+      <Filter>Header Files\hovar\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="road_segment.h">
+      <Filter>Header Files\hovar\game_objects</Filter>
+    </ClInclude>
+    <ClInclude Include="player_character.h">
+      <Filter>Header Files\hovar\game_objects</Filter>
+    </ClInclude>
+    <ClInclude Include="pickup.h">
+      <Filter>Header Files\hovar\game_objects</Filter>
+    </ClInclude>
+    <ClInclude Include="game_object.h">
+      <Filter>Header Files\hovar\game_objects</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
