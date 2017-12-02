@@ -127,82 +127,12 @@ namespace hovar
 		// The main game logic
 		if (game_state_ == running)
 		{
-			score_ += frame_time;
-			::AppData* dat = sampleUpdateBegin();
-
-			// use the tracking library to try and find markers
-			smartUpdate(dat->currentImage);
-
-			// update all marker information
-			for (int marker_id = 0; marker_id < NUM_OF_MARKERS; marker_id++)
-			{
-				// check to see if a marker is being tracked
-				if (sampleIsMarkerFound(marker_id))
-				{
-					game_object_manager_->SetMarkerVisiblity(marker_id, true);
-					// marker is being tracked, get it’s transform
-					gef::Matrix44 marker_transform;
-					sampleGetTransform(
-						marker_id,
-						&marker_transform);
-
-					game_object_manager_->SetMarkerPosition(marker_id, marker_transform);
-				}
-				else
-				{
-					game_object_manager_->SetMarkerVisiblity(marker_id, false);
-				}
-			}
-			game_object_manager_->UpdateMarkerData();
-			
-			// Update player and roads
-			player_character_->Update(input_manager_->controller_input()->GetController(0), frame_time);
-
-			for (int r = 0; r < NUM_OF_MARKERS; r++)
-			{
-				road_[r]->Update();
-			}
-
-			// Collision detection
-			if (!game_object_manager_->PlayerRoadCollision(frame_time))
-			{
-				if (player_character_->IsAlive())
-				{
-					player_character_->Kill();
-					pickup_manager_->Reset();
-				}
-			}
-
-			if (pickup_manager_->PlayerPickupCollision(player_character_))
-			{
-				player_character_->Stop();
-				game_object_manager_->FindNewParent();
-				score_ += 10.0f;
-			}
-
-			// Update pickups
-			pickup_manager_->Update(frame_time);
-
-			// Check plyer is alive
-			if (player_character_->GetEnergy() < 0.0f)
-			{
-				game_state_ = finished;
-			}
-
-			sampleUpdateEnd(dat);
+			GameLogic(frame_time);
 		}
 		// the game over logic
 		else
 		{
-			// wait for user to press x or o
-			if (input_manager_->controller_input()->GetController(0)->buttons_pressed() & gef_SONY_CTRL_CROSS)
-			{
-				Restart();
-			}
-			else if (input_manager_->controller_input()->GetController(0)->buttons_pressed() & gef_SONY_CTRL_CIRCLE)
-			{
-				return false;
-			}
+			return GameOverLogic();
 		}
 
 		return true;
@@ -372,6 +302,96 @@ namespace hovar
 		shader_data.AddPointLight(point_light);
 	}
 
+	void MainLevel::CheckForCollisions()
+	{
+		if (!game_object_manager_->PlayerRoadCollision())
+		{
+			if (player_character_->IsAlive())
+			{
+				player_character_->Kill();
+				pickup_manager_->Reset();
+			}
+		}
+
+		if (pickup_manager_->PlayerPickupCollision(player_character_))
+		{
+			player_character_->Stop();
+			game_object_manager_->FindNewParent();
+			score_ += 10.0f;
+		}
+	}
+
+	void MainLevel::UpdateMarkers()
+	{
+		// update all marker information
+		for (int marker_id = 0; marker_id < NUM_OF_MARKERS; marker_id++)
+		{
+			// check to see if a marker is being tracked
+			if (sampleIsMarkerFound(marker_id))
+			{
+				game_object_manager_->SetMarkerVisiblity(marker_id, true);
+				// marker is being tracked, get it’s transform
+				gef::Matrix44 marker_transform;
+				sampleGetTransform(
+					marker_id,
+					&marker_transform);
+
+				game_object_manager_->SetMarkerPosition(marker_id, marker_transform);
+			}
+			else
+			{
+				game_object_manager_->SetMarkerVisiblity(marker_id, false);
+			}
+		}
+		game_object_manager_->UpdateMarkerData();
+	}
+
+	void MainLevel::GameLogic(float dt)
+	{
+		score_ += dt;
+		::AppData* dat = sampleUpdateBegin();
+
+		// use the tracking library to try and find markers
+		smartUpdate(dat->currentImage);
+
+		UpdateMarkers();
+
+		// Update player and roads
+		player_character_->Update(input_manager_->controller_input()->GetController(0), dt);
+
+		for (int r = 0; r < NUM_OF_MARKERS; r++)
+		{
+			road_[r]->Update();
+		}
+
+		// Collision detection
+		CheckForCollisions();
+
+		// Update pickups
+		pickup_manager_->Update(dt);
+
+		// Check plyer is alive
+		if (player_character_->GetEnergy() < 0.0f)
+		{
+			game_state_ = finished;
+		}
+
+		sampleUpdateEnd(dat);
+	}
+
+	bool MainLevel::GameOverLogic()
+	{
+		// wait for user to press x or o
+		if (input_manager_->controller_input()->GetController(0)->buttons_pressed() & gef_SONY_CTRL_CROSS)
+		{
+			Restart();
+		}
+		else if (input_manager_->controller_input()->GetController(0)->buttons_pressed() & gef_SONY_CTRL_CIRCLE)
+		{
+			return false;
+		}
+	}
+
 	void MainLevel::CleanUp()
 	{
 		if (input_manager_)
@@ -445,14 +465,14 @@ namespace hovar
 
 		if (road_model_)
 		{
-			delete road_model_;
-			road_model_ = NULL;
+			//delete road_model_;
+			//road_model_ = NULL;
 		}
 
 		if (parent_model_)
 		{
-			delete parent_model_;
-			parent_model_ = NULL;
+			//delete parent_model_;
+			//parent_model_ = NULL;
 		}
 
 		smartRelease();

@@ -45,10 +45,10 @@ namespace hovar
 		/// @param[in]	renderer	The 3D rendering engine.
 		virtual void Render(gef::Renderer3D* renderer);
 
-	/* <To be deleted> */
+	/* <To be deleted> 
 		virtual std::list<gef::MeshInstance*> GetWallCubes();
 		virtual std::list<obb::OBB*> GetWallObbs();
-	/* </To be deleted> */
+	 </To be deleted> */
 
 
 	/* <Move to player character?> */
@@ -73,7 +73,7 @@ namespace hovar
 		
 		/// @brief Moves the game object.
 		/// @param[in]	translation_vector	The amount to move the object.
-		void Translate(gef::Vector4 translation_vector);
+		//void Translate(gef::Vector4 translation_vector);
 
 		/// @brief Set the velocity to zero.
 		void Stop() { velocity_ = velocity_.kZero; }

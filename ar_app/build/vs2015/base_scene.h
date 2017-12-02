@@ -31,7 +31,7 @@ namespace hovar
 		/// @note Calculates framerate and gets new controller input.
 		/// @param[in] frame_time		The time since the last frame (delta time).
 		/// @return Always returns true.
-		virtual bool Update(const float frame_time);7
+		virtual bool Update(const float frame_time);
 
 		/// @brief Virtual render.
 		/// @note No functionality, purely for interface.

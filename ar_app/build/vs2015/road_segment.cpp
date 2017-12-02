@@ -4,7 +4,7 @@ namespace hovar
 {
 	RoadSegment::RoadSegment()
 	{
-		GameObject();
+		GameObject::GameObject();
 	}
 
 

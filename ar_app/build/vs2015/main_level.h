@@ -71,6 +71,11 @@ namespace hovar
 		/// @note Creates a point light and sets the ambient light.
 		void InitLights();
 
+		void CheckForCollisions();
+		void UpdateMarkers();
+		void GameLogic(float dt);
+		bool GameOverLogic();
+
 		/// @brief Render camera feed.
 		/// @param[in] dat	Structure containing camera feed image
 		void RenderCameraFeed(struct ::AppData* dat);

@@ -70,12 +70,12 @@ namespace hovar
 		}
 	}
 
-	void GameObject::Translate(gef::Vector4 translation_vector)
+	/*void GameObject::Translate(gef::Vector4 translation_vector)
 	{
 		gef::Vector4 new_position = m_transform_->translation();
 		m_transform_->set_translation(new_position += translation_vector);
 		UpdateMeshTransform();
-	}
+	}*/
 
 	void GameObject::Rotate(gef::Vector4 euler_rotation)
 	{
@@ -127,15 +127,15 @@ namespace hovar
 		}
 		return current_speed;
 	}
-
+	/*
 	std::list<gef::MeshInstance*> GameObject::GetWallCubes()
 	{
 		return std::list<gef::MeshInstance*>();
 	}
-	s
+	
 	std::list<obb::OBB*> GameObject::GetWallObbs()
 	{
 		return std::list<obb::OBB*>();
-	}
+	}*/
 }
 

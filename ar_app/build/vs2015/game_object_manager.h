@@ -65,11 +65,11 @@ namespace hovar
 
 		/// @brief Checks whether player is on a road.
 		/// @return If the player is currently touching a road.
-		bool PlayerRoadCollision(float dt);
+		bool PlayerRoadCollision();
 
 		/// @brief Returns ID of reference marker.
 		/// @return The ID of the reference marker.
-		int ParentID() { return current_parent_; }
+		int ParentID() { return current_parent_ID_; }
 
 	private:
 		/// @brief Updates tracked objects.
@@ -116,7 +116,7 @@ namespace hovar
 		std::list<GameObject*> marker_specific_objects_;
 
 	// UNUSED ??? ///
-		gef::Matrix44 marker_displacement_;
+		//gef::Matrix44 marker_displacement_;
 
 		/// The last known transforms of all markers
 		gef::Matrix44 marker_transform_matrices_[NUM_OF_MARKERS];
@@ -125,13 +125,13 @@ namespace hovar
 		bool markers_visible_[NUM_OF_MARKERS];
 
 		/// Amount of time to wait before allowing reassigning reference marker
-		float overlap_allowance_;
+		//float overlap_allowance_;
 
 		/// Time since reference marker was reassigned
-		float overlap_counter_;
+		//float overlap_counter_;
 
 		/// ID of the current reference marker
-		int current_parent_;
+		int current_parent_ID_;
 	};
 }
 #endif // !_GAME_OBJECT_MANAGER_H

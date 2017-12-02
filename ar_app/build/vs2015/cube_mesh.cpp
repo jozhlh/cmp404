@@ -61,16 +61,16 @@ namespace hovar
 			0, 7, 4
 		};
 
-		primitive->InitIndexBuffer(platform_, static_cast<const void*>(indices), sizeof(indices) / sizeof(UInt32), sizeof(UInt32));
+		primitive->InitIndexBuffer(platform, static_cast<const void*>(indices), sizeof(indices) / sizeof(UInt32), sizeof(UInt32));
 		primitive->set_type(gef::TRIANGLE_LIST);
 
 		// set size of bounds, we need this for collision detection routines
 		gef::Aabb aabb(gef::Vector4(-half_x, -half_y, -half_z), gef::Vector4(half_x, half_y, half_z));
 		gef::Sphere sphere(aabb);
-		gef::Sphere small_sphere(gef::Vector4(0.0f, 0.0f, 0.0f), half_x);
+		//gef::Sphere small_sphere(gef::Vector4(0.0f, 0.0f, 0.0f), half_x);
 
 		mesh->set_aabb(aabb);
-		mesh->set_bounding_sphere(small_sphere);
+		mesh->set_bounding_sphere(sphere);
 
 		return mesh;
 	}

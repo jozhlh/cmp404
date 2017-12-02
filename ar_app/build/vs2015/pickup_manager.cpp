@@ -8,10 +8,10 @@ namespace hovar
 {
 	PickupManager::PickupManager()
 	{
-		spawn_frequency_ = 5.0f;
+		//spawn_frequency_ = 5.0f;
 		pickups_per_spawn_ = 2;
 		spawn_radius_ = 0.2f;
-		spawn_counter_ = 0.0f;
+		//spawn_counter_ = 0.0f;
 		ready_to_spawn_ = true;
 		srand(time(NULL));
 	}
@@ -57,12 +57,16 @@ namespace hovar
 			if (!(*pickup)->IsCollected())
 			{
 				// player has collected pickup
-				if (CollisionOOBB(player->GetObb(), (*pickup)->GetObb()))
+				// Do sphercial collision test first as it is less expensive - only do detailed collision when the spheres intersect
+				if (CollisionSpherical(player->GetCollider(), (*pickup)->GetCollider()))
 				{
-					ready_to_spawn_ = true;
-					player->GiveEnergy((*pickup)->Energy());
-					(*pickup)->SetCollected(true);
-					return true;
+					if (CollisionOOBB(player->GetObb(), (*pickup)->GetObb()))
+					{
+						ready_to_spawn_ = true;
+						player->GiveEnergy((*pickup)->Energy());
+						(*pickup)->SetCollected(true);
+						return true;
+					}
 				}
 			}
 		}
@@ -122,6 +126,27 @@ namespace hovar
 		spawn_pos.set_y(-y_dimensions + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (y_dimensions + y_dimensions))));
 		spawn_pos.set_z(0.02f);
 		return spawn_pos;
+	}
+
+	bool PickupManager::CollisionSpherical(gef::MeshInstance* collider_mesh_1, gef::MeshInstance* collider_mesh_2)
+	{
+		// Calculate the squared distance between the centers of both spheres
+		gef::Vector4 collider_1_pos = collider_mesh_1->mesh()->bounding_sphere().position().Transform(collider_mesh_1->transform());
+		gef::Vector4 collider_2_pos = collider_mesh_2->mesh()->bounding_sphere().position().Transform(collider_mesh_2->transform());
+		float distance_squared = gef::Vector4(collider_1_pos - collider_2_pos).LengthSqr();
+
+		// Calculate the squared sum of both radii
+		float radii_sum_squared = collider_mesh_1->mesh()->bounding_sphere().radius() + collider_mesh_2->mesh()->bounding_sphere().radius();
+		radii_sum_squared *= radii_sum_squared;
+
+		// if the the distance squared is less than or equal to the square sum of the radii, then there is a collision
+		if (distance_squared <= radii_sum_squared)
+		{
+			return true;
+		}
+
+		// if the distance squared is greater than the sum of the radii squared there is no collision
+		return false;
 	}
 
 	bool PickupManager::CollisionOOBB(obb::OBB * collider_obb_1_, obb::OBB * collider_obb_2_)

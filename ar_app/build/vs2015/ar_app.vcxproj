@@ -75,7 +75,7 @@
     <ClCompile Include="..\..\main_vita.cpp" />
     <ClCompile Include="base_scene.cpp" />
     <ClCompile Include="basis.cpp" />
-    <ClCompile Include="camera_manager.cpp" />
+    <ClCompile Include="camera.cpp" />
     <ClCompile Include="coordinate_frame.cpp" />
     <ClCompile Include="cube_mesh.cpp" />
     <ClCompile Include="game_object.cpp" />
@@ -94,7 +94,7 @@
     <ClInclude Include="..\..\ar_app.h" />
     <ClInclude Include="base_scene.h" />
     <ClInclude Include="basis.h" />
-    <ClInclude Include="camera_manager.h" />
+    <ClInclude Include="camera.h" />
     <ClInclude Include="coordinate_frame.h" />
     <ClInclude Include="cube_mesh.h" />
     <ClInclude Include="game_object.h" />

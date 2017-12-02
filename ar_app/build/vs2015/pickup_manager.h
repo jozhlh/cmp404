@@ -72,6 +72,13 @@ namespace hovar
 		/// @return The random location.
 		gef::Vector4 GetSpawnLocation(float x_dimensions, float y_dimensions);
 
+		/// @brief Spherical collision test.
+		/// @note Determines if two spheres are overlapping.
+		/// @param[in] collider_mesh_1 	Sphere 1.
+		/// @param[in] collider_mesh_2 	Sphere 2.
+		/// @return Whether Sphere 1 and Sphere 2 overlap.
+		bool CollisionSpherical(gef::MeshInstance* collider_mesh_1, gef::MeshInstance* collider_mesh_2);
+
 		/// @brief Oriented bounding box collision test.
 		/// @note Determines whether two cubes overlap in 3D space.
 		/// @param[in] collider_obb_1 	The first collision volume.
@@ -101,10 +108,10 @@ namespace hovar
 		float pickup_scale_;
 
 		/// How regularly to automatically spawn objects
-		float spawn_frequency_;
+		//float spawn_frequency_;
 
 		/// How long since pickups were last spawned
-		float spawn_counter_;
+		//float spawn_counter_;
 
 		/// How far away from the centre point pickups can be spawned
 		float spawn_radius_;

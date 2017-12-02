@@ -7,10 +7,10 @@ namespace hovar
 {
 	GameObjectManager::GameObjectManager()
 	{
-		current_parent_ = 0;
+		current_parent_ID_ = 0;
 		current_parent_marker_ = NULL;
-		overlap_allowance_ = 0.3f;
-		overlap_counter_ = 0.0f;
+		//overlap_allowance_ = 0.3f;
+		//overlap_counter_ = 0.0f;
 		for (int marker_num = 0; marker_num < NUM_OF_MARKERS; marker_num++)
 		{
 			marker_transform_matrices_[marker_num].SetIdentity();
@@ -64,14 +64,18 @@ namespace hovar
 		}
 	}
 
-	bool GameObjectManager::PlayerRoadCollision(float dt)
+	bool GameObjectManager::PlayerRoadCollision()
 	{
-		overlap_counter_ += dt;
+		//overlap_counter_ += dt;
 		for (std::list<GameObject*>::iterator tracked_object = marker_specific_objects_.begin(); tracked_object != marker_specific_objects_.end(); ++tracked_object)
 		{
-			if (CollisionOOBB((*tracked_object)->GetObb(), hovership_->GetObb()))
+			// Do sphercial collision test first as it is less expensive - only do detailed collision when the spheres intersect
+			if (CollisionSpherical((*tracked_object)->GetCollider(), hovership_->GetCollider()))
 			{
-				return true;
+				if (CollisionOOBB((*tracked_object)->GetObb(), hovership_->GetObb()))
+				{
+					return true;
+				}
 			}
 		}
 		return false;
@@ -89,7 +93,7 @@ namespace hovar
 
 	void GameObjectManager::TransferOwnership(GameObject* new_owner)
 	{
-		current_parent_ = new_owner->GetParentMarkerID();
+		current_parent_ID_ = new_owner->GetParentMarkerID();
 		for (std::list<GameObject*>::iterator tracked_object = marker_bound_objects_.begin(); tracked_object != marker_bound_objects_.end(); ++tracked_object)
 		{
 			SetNewLocal((*tracked_object), new_owner);
