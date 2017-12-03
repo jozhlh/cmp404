@@ -56,9 +56,6 @@
     <ClCompile Include="obb.cpp">
       <Filter>Source Files\obb</Filter>
     </ClCompile>
-    <ClCompile Include="camera.cpp">
-      <Filter>Source Files\hovar</Filter>
-    </ClCompile>
     <ClCompile Include="cube_mesh.cpp">
       <Filter>Source Files\hovar</Filter>
     </ClCompile>
@@ -108,9 +105,6 @@
     </ClInclude>
     <ClInclude Include="obb.h">
       <Filter>Header Files\obb</Filter>
-    </ClInclude>
-    <ClInclude Include="camera.h">
-      <Filter>Header Files\hovar</Filter>
     </ClInclude>
     <ClInclude Include="cube_mesh.h">
       <Filter>Header Files\hovar</Filter>

@@ -80,6 +80,23 @@ namespace hovar
 		/// @note Creates a point light and sets the ambient light.
 		void InitLights();
 
+		/// @brief Initialise camera.
+		/// @note Initialise vita rear camera display variables.
+		void InitCameraDisplay();
+
+		/// @brief Initialise road objects.
+		/// @note Initialise the objects which are bound to specific markers.
+		/// @param[in] mv_scale		The art asset scaling factor.
+		void InitRoads(float mv_scale);
+
+		/// @brief Initialise player character.
+		/// @param[in] mv_scale		The art asset scaling factor.
+		void InitPlayerCharacter(float mv_scale);
+
+		/// @brief Initialise the pickup manager.
+		/// @param[in] mv_scale		The art asset scaling factor.
+		void InitPickups(float mv_scale);
+
 		/// @brief Executes Collision Detection.
 		/// @note Tests for collisions between the player and roads / pickups.
 		void CheckForCollisions();
