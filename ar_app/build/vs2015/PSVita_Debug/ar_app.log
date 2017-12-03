@@ -1,26 +1,2 @@
-﻿  ar_app.cpp
-M:\CMP404\ar_app\build\vs2015\coordinate_frame.h(60,7): warning 14: extra text after expected end of preprocessing directive
-  
-M:\CMP404\ar_app\build\vs2015\pickup.h(34,7): warning 1011: function "hovar::GameObject::Update()" is hidden by "hovar::Pickup::Update" -- virtual function override intended?
-  
-M:\CMP404\ar_app\build\vs2015\player_character.h(48,7): warning 1011: function "hovar::GameObject::Update()" is hidden by "hovar::PlayerCharacter::Update" -- virtual function override intended?
-  
-  main_vita.cpp
-M:\CMP404\ar_app\build\vs2015\coordinate_frame.h(60,7): warning 14: extra text after expected end of preprocessing directive
-  
-M:\CMP404\ar_app\build\vs2015\pickup.h(34,7): warning 1011: function "hovar::GameObject::Update()" is hidden by "hovar::Pickup::Update" -- virtual function override intended?
-  
-M:\CMP404\ar_app\build\vs2015\player_character.h(48,7): warning 1011: function "hovar::GameObject::Update()" is hidden by "hovar::PlayerCharacter::Update" -- virtual function override intended?
-  
-  main_level.cpp
-M:\CMP404\ar_app\build\vs2015\coordinate_frame.h(60,7): warning 14: extra text after expected end of preprocessing directive
-  
-M:\CMP404\ar_app\build\vs2015\pickup.h(34,7): warning 1011: function "hovar::GameObject::Update()" is hidden by "hovar::Pickup::Update" -- virtual function override intended?
-  
-M:\CMP404\ar_app\build\vs2015\player_character.h(48,7): warning 1011: function "hovar::GameObject::Update()" is hidden by "hovar::PlayerCharacter::Update" -- virtual function override intended?
-  
-M:\CMP404\ar_app\build\vs2015\main_level.cpp(486,10): warning 416: delete of pointer to incomplete class
-  
-M:\CMP404\ar_app\build\vs2015\main_level.cpp(492,10): warning 416: delete of pointer to incomplete class
-  
+﻿  main_level.cpp
   ar_app.vcxproj -> M:\CMP404\ar_app\build\vs2015\PSVita_Debug\ar_app.self

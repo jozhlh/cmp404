@@ -33,13 +33,14 @@ namespace hovar
 		};
 
 	public:
+		using GameObject::Update;
 		/// @brief Default constructor.
 		/// @note Player movement variables are initialised.
 		PlayerCharacter();
 
 		/// @brief Default destructor.
 		/// @note Collider is released to free up unused memory.
-		virtual ~PlayerCharacter();
+		~PlayerCharacter();
 
 		/// @brief Update executes every frame.
 		/// @note Test for input to change movement and move vehicle according to its velocity.

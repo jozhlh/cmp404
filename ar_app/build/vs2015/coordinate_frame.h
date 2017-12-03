@@ -57,4 +57,4 @@ namespace obb
 			}
 	};
 }
-#endif _COORDINATE_FRAME_H
+#endif //_COORDINATE_FRAME_H

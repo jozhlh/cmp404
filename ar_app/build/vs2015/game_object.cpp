@@ -63,11 +63,11 @@ namespace hovar
 		SetTransformFromMatrix(m_local_transform_->GetMatrix() * parent_transform_);
 	}
 
-	void GameObject::VelocityDrag(float dead_zone)
+	void GameObject::VelocityDrag()
 	{
 		gef::Vector4 drag_vector = velocity_;
-		velocity_.set_x(ApplyDragWithDeadZone(drag_vector.x(), dead_zone));
-		velocity_.set_y(ApplyDragWithDeadZone(drag_vector.y(), dead_zone));
+		velocity_.set_x(ApplyDragWithDeadZone(drag_vector.x(), drag_dead_zone_));
+		velocity_.set_y(ApplyDragWithDeadZone(drag_vector.y(), drag_dead_zone_));
 	}
 
 	void GameObject::VelocityLimits(float max_speed)

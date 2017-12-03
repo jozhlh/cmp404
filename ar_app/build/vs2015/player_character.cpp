@@ -16,7 +16,6 @@ namespace hovar
 {
 	PlayerCharacter::PlayerCharacter()
 	{
-		GameObject();
 		max_speed_ = 0.01f;
 		acceleration_ = 0.0001f;
 		deceleration_ = -0.0001f;
@@ -24,6 +23,7 @@ namespace hovar
 		turning_speed_ = 3.0f;
 		SetVelocity(gef::Vector4(0.0f, 0.0f, 0.0f));
 		SetDrag(0.000025f);
+		SetDeadZone(0.000002f);
 
 		current_energy_ = 20.0f;
 		energy_decay_rate_ = 1.0f;
@@ -107,7 +107,7 @@ namespace hovar
 			PickupAnim(dt);
 		}
 		// Apply drag to velocity
-		VelocityDrag(0.000002f);
+		VelocityDrag();
 		VelocityLimits(max_speed_);
 		// Update position based on velocity
 		UpdateVelocity();

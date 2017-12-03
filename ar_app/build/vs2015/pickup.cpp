@@ -20,6 +20,8 @@ namespace hovar
 
 	Pickup::~Pickup()
 	{
+		delete collider_;
+		collider_ = NULL;
 	}
 
 	void Pickup::Update(float dt)

@@ -17,8 +17,6 @@
 
 namespace hovar
 {
-	class Platform;
-
 	/**
 	The objects which are attached to specific markers.
 	*/
@@ -30,8 +28,8 @@ namespace hovar
 		RoadSegment();
 
 		/// @brief Default destructor.
-		/// @note Releases mesh data.
-		virtual ~RoadSegment();
+		/// @note No default functionality.
+		~RoadSegment();
 
 		/// @brief Update position.
 		/// @note Model and collision volumes are set to the correct world transform.

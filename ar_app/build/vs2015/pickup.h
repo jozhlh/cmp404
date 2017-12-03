@@ -20,13 +20,14 @@ namespace hovar
 	class Pickup : public GameObject
 	{
 	public:
+		using GameObject::Update;
 		/// @brief Default constructor.
 		/// @note initialise energy and collected status.
 		Pickup();
 
 		/// @brief Default destructor.
 		/// @note No default functionality.
-		virtual ~Pickup();
+		~Pickup();
 
 		/// @brief Update function.
 		/// @note Gradually roatate collectable.

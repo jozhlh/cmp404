@@ -14,6 +14,7 @@
 
 #include <system\platform.h>
 #include <graphics\sprite_renderer.h>
+#include <graphics\mesh.h>
 
 namespace hovar
 {
@@ -138,7 +139,7 @@ namespace hovar
 		gef::Matrix44 viewMatrix;
 		viewMatrix.SetIdentity();
 		renderer_3d_->set_view_matrix(viewMatrix);
-
+		//renderer_3d_->SetFillMode(gef::Renderer3D::FillMode::kWireframe);
 
 		// Begin rendering 3D meshes, don't clear the frame buffer
 		renderer_3d_->Begin(false);
@@ -481,7 +482,19 @@ namespace hovar
 			}
 		}
 
-		if (road_mesh_)
+		if (road_model_)
+		{
+			delete road_model_;
+			road_model_ = NULL;
+		}
+
+		if (parent_model_)
+		{
+			delete parent_model_;
+			parent_model_ = NULL;
+		}
+
+	/*	if (road_mesh_)
 		{
 			delete road_mesh_;
 			road_mesh_ = NULL;
@@ -491,19 +504,9 @@ namespace hovar
 		{
 			delete parent_mesh_;
 			parent_mesh_ = NULL;
-		}
+		}*/
 
-		if (road_model_)
-		{
-			//delete road_model_;
-			//road_model_ = NULL;
-		}
-
-		if (parent_model_)
-		{
-			//delete parent_model_;
-			//parent_model_ = NULL;
-		}
+		
 
 		smartRelease();
 		sampleRelease();

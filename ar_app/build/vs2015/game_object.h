@@ -44,6 +44,10 @@ namespace hovar
 		/// @note Uses local and parent transform to get world transform.
 		virtual void Update();
 
+		virtual void Update(const gef::SonyController* controller, float dt) {}
+
+		virtual void Update(float dt) {}
+
 		/// @brief Interface for setting parent marker object.
 		/// @note No default functionality.
 		/// @param[in]	is_parent	Whether the object's marker is the parent marker.
@@ -63,7 +67,7 @@ namespace hovar
 		/// @note Reduces the velocity by the drag value. If the velocity is smaller than
 		/// the dead zone, the velocity is set to zero.
 		/// @param[in]	dead_zone	The point at which the velocity is assumed to be zero.
-		void VelocityDrag(float dead_zone);
+		void VelocityDrag();
 
 		/// @brief Limits the velocity.
 		/// @note Stops the velocity going over the max speed.
@@ -95,6 +99,10 @@ namespace hovar
 		/// @brief Set the drag value.
 		/// @param[in] new_drag		The new drag value.
 		void SetDrag(float new_drag) { drag_ = new_drag; }
+
+		/// @brief Set the dead zone value.
+		/// @param[in] dead_zone		The new dead zone value.
+		void SetDeadZone(float dead_zone) { drag_dead_zone_ = dead_zone; }
 
 		/// @brief Set the asset offset.
 		/// @note Set the transform that converts the imported asset's transform
@@ -207,6 +215,9 @@ namespace hovar
 
 		/// The amount to reduce velocity per frame
 		float drag_;
+
+		/// The point at which the velocity is assumed to be zero.
+		float drag_dead_zone_;
 
 		/// The number of the marker which is currently the parent
 		int parent_marker_id_;
