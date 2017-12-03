@@ -44,8 +44,15 @@ namespace hovar
 		/// @note Uses local and parent transform to get world transform.
 		virtual void Update();
 
+		/// @brief Virtual update accepting controller
+		/// @note Virtual update for player character class which receives controller input for its update.
+		/// @param[in]	controller	The controller to read input from.
+		/// @param[in]	dt			The time since the last frame (delta time).
 		virtual void Update(const gef::SonyController* controller, float dt) {}
 
+		/// @brief Virtual update accepting delta time
+		/// @note Virtual update for pickup class which receives delta time for its update.
+		/// @param[in]	dt	The time since the last frame (delta time).
 		virtual void Update(float dt) {}
 
 		/// @brief Interface for setting parent marker object.

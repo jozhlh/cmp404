@@ -139,7 +139,6 @@ namespace hovar
 		gef::Matrix44 viewMatrix;
 		viewMatrix.SetIdentity();
 		renderer_3d_->set_view_matrix(viewMatrix);
-		//renderer_3d_->SetFillMode(gef::Renderer3D::FillMode::kWireframe);
 
 		// Begin rendering 3D meshes, don't clear the frame buffer
 		renderer_3d_->Begin(false);
