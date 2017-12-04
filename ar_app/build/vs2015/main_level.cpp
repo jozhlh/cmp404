@@ -4,7 +4,7 @@
 	Main level which runs the game.
 
 	@author	Josh Hale
-	Last Edited: 02/12/17
+	Last Edited: 04/12/17
 */
 
 #include "main_level.h"
@@ -492,20 +492,6 @@ namespace hovar
 			delete parent_model_;
 			parent_model_ = NULL;
 		}
-
-	/*	if (road_mesh_)
-		{
-			delete road_mesh_;
-			road_mesh_ = NULL;
-		}
-
-		if (parent_mesh_)
-		{
-			delete parent_mesh_;
-			parent_mesh_ = NULL;
-		}*/
-
-		
 
 		smartRelease();
 		sampleRelease();

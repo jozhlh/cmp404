@@ -4,7 +4,7 @@
 	The player controlled vehicle.
 
 	@author	Josh Hale
-	Last Edited: 02/12/17
+	Last Edited: 04/12/17
 */
 
 #ifndef _PLAYER_CHARACTER_H
@@ -33,7 +33,9 @@ namespace hovar
 		};
 
 	public:
+		/// Using Update for override
 		using GameObject::Update;
+
 		/// @brief Default constructor.
 		/// @note Player movement variables are initialised.
 		PlayerCharacter();

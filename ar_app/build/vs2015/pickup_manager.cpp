@@ -4,7 +4,7 @@
 	Manages the spawning and collision of collectable items.
 
 	@author	Josh Hale
-	Last Edited: 02/12/17
+	Last Edited: 04/12/17
 */
 
 #include "pickup_manager.h"
@@ -171,6 +171,7 @@ namespace hovar
 			std::cout << collider_obb_2_->O.x << " " << collider_obb_2_->O.y << " " << collider_obb_2_->O.z << " size " << collider_obb_2_->E.x << " " << collider_obb_2_->E.y << " " << collider_obb_2_->E.z << std::endl << std::endl;
 			return true;
 		}
+		return false;
 	}
 }
 

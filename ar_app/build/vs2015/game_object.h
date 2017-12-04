@@ -4,7 +4,7 @@
 	The default functionality of all objects in the game.
 
 	@author	Josh Hale
-	Last Edited: 02/12/17
+	Last Edited: 04/12/17
 */
 
 #ifndef _GAME_OBJECT_H
@@ -65,7 +65,6 @@ namespace hovar
 		/// @param[in]	renderer	The 3D rendering engine.
 		virtual void Render(gef::Renderer3D* renderer);
 
-	/* <Move to player character?> */
 		/// @brief Updates position.
 		/// @note Uses the current velocity to update the position.
 		void UpdateVelocity();
@@ -87,7 +86,6 @@ namespace hovar
 
 		/// @brief Set the velocity to zero.
 		void Stop() { velocity_ = velocity_.kZero; }
-	/* </Move to player character?> */
 		
 		/// @brief Rotates the game object.
 		/// @param[in] euler_rotation	The amount to rotate the object.
@@ -201,7 +199,6 @@ namespace hovar
 		gef::Matrix44 parent_transform_;
 	
 	private:
-	/* <Move to player character?> */
 		/// @brief Calculates the new speed.
 		/// @note Applies drag to the current speed to calculate new speed.
 		/// If the speed is smaller than the dead zone it is nullified
@@ -209,7 +206,6 @@ namespace hovar
 		/// @param[in] dead_limits		The dead zone.
 		/// @return The new speed
 		float ApplyDragWithDeadZone(float current_speed, float dead_limits);
-	/* </Move to player character?> */
 
 		/// The string name of the object
 		std::string tag_;

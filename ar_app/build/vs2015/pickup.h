@@ -4,7 +4,7 @@
 	Collectable items which recharge the player.
 
 	@author	Josh Hale
-	Last Edited: 02/12/17
+	Last Edited: 04/12/17
 */
 
 #ifndef _PICKUP_H
@@ -20,7 +20,9 @@ namespace hovar
 	class Pickup : public GameObject
 	{
 	public:
+		/// Using Update for override
 		using GameObject::Update;
+
 		/// @brief Default constructor.
 		/// @note initialise energy and collected status.
 		Pickup();
